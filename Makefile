@@ -1,15 +1,15 @@
 # Имя компилятора
 CC = g++ 
 # Указание компилятору на поиск заголовочных файлов
-INCLUDE = -I./include  
+INCLUDE = -I./vomit/include  
 
 # перечень подключаемых библиотек (например -lncurses)
 LIBS = 
 
 # Направление поиска исходных файлов для make
-vpath %.cpp 
+vpath %.cpp ./vomit/src/ ./vomit/src/game/ ./vomit/src/builder/
 # Направление поиска заголовочных файлов для make
-vpath %.h 
+vpath %.hpp ./vomit/include/
 # Установка флагов для компиляции объектных файлов
 FLAGS = -Wall -c -g -std=c++98 $(INCLUDE)
 # Установка флагов для линковщика
@@ -21,7 +21,11 @@ LDFLAGS = $(LIBS)
 # Объектные файлы
 # Пример: MAINOBJ = framework.o
 
-ALLOBJ	= $(MAINOBJ) 
+MAINOBJ = vomitblood.o
+VGAMEOBJ = game.o
+VBUILDEROBJ = builder.o
+
+ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VBUILDEROBJ)
 
 EXE := vomitblood
 
@@ -33,6 +37,15 @@ $(EXE) : $(ALLOBJ)
 # $< - переменная хранящая первый параметр строки пререквизита
 # Пример: $(MAINOBJ) : $(MAINSRC)
 #		$(CC) $< $(FLAGS) -o $@
+
+$(MAINOBJ) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VGAMEOBJ) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VBUILDEROBJ) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
 
 # Очистка директории от объектных файлов
 .PHONY: clean
