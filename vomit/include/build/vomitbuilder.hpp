@@ -1,6 +1,8 @@
 #ifndef VOMIT_BUILDER
 #define VOMIT_BUILDER 1
 
+#include "../model/vomitmodel.hpp"
+
 /* 
  * Внимание! Никогда не подключайте этот заголовочный файл самостоятельно!
  * Подключите файл vomitegame.hpp вместо этого!
@@ -23,6 +25,9 @@
 	 * выделенные под объекты состояний
 	*/
 	class AbstractBuilder {
+	protected:
+		virtual void buildObjects() = 0;
+		virtual void disposeObjects() = 0;
 	public:
 		virtual ~AbstractBuilder() {}
 		virtual void build() = 0;
@@ -30,25 +35,30 @@
 
 	////////////////////////////////////////////////////////
 
-class GameBuilder : public AbstractBuilder {
-public:
-	~GameBuilder() {}
-	void build();
-};
+#include "gamebuilder.hpp"
 
 class MenuBuilder : public AbstractBuilder {
+protected:
+	void buildObjects();
+	void disposeObjects();
 public:
 	~MenuBuilder() {}
 	void build();
 };
 
 class RatingBuilder : public AbstractBuilder {
+protected:
+	void buildObjects();
+	void disposeObjects();
 public:
 	~RatingBuilder() {}
 	void build();
 };
 
 class SettingBuilder : public AbstractBuilder {
+protected:
+	void buildObjects();
+	void disposeObjects();
 public:
 	~SettingBuilder() {}
 	void build();
