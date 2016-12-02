@@ -4,10 +4,10 @@ enum builderName { game, menu, rating, setting };
 
 int VomitGame::init()
 {
-	_builder[game] = new GameBuilder;
-	_builder[menu] = new MenuBuilder;
-	_builder[rating] = new RatingBuilder;
-	_builder[setting] = new SettingBuilder;
+	_builder[game] = new GameBuilder();
+	_builder[menu] = new MenuBuilder();
+	_builder[rating] = new RatingBuilder();
+	_builder[setting] = new SettingBuilder();
 
 	for (int i = 0; i < _buildQuantity; ++i)
 		if ( ! _builder[i] )

@@ -1,7 +1,7 @@
 #ifndef _VOMITGAME
 #define _VOMITGAME 1
 
-#include "vomitbuilder.hpp"
+#include "build/vomitbuilder.hpp"
 
 /*
  * VomitGame - главный класс игры
