@@ -1,6 +1,9 @@
 #ifndef GAME_BUILDER
 #define GAME_BUILDER 1
 
+#include "../model/gamemodel.hpp"
+#include "../controller/gamecontroller.hpp"
+
 /*
  * Построитель игрового пространства
  * 
@@ -13,8 +16,12 @@
  * состояние "Игра".
 */
 class GameBuilder : public AbstractBuilder {
-	enum _modelsNames { modelFacade, map, obstacle, tadpole };
-	static const int _modelsQuantity = 4;
+	GameModelFacade *_modelFacade;
+	MapModel *_map;
+	TadpoleModel *_tadpole;
+
+	GameController *_controller;
+
 protected:
 	void buildObjects();
 	void disposeObjects();

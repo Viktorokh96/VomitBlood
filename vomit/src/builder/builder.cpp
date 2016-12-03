@@ -1,4 +1,5 @@
 #include <build/vomitbuilder.hpp>
+#include <new>
 
 ////////////////// Game Builder /////////////////////////
 
@@ -10,17 +11,35 @@ void GameBuilder::build()
 {
 	buildObjects();
 
-	// flow control to controller
+	_controller->manage();		// Передача управления контроллеру
 	
 	disposeObjects();
 }	
 
 void GameBuilder::buildObjects()
 {
+	try {
+		_map = new MapModel();
+		_tadpole = new TadpoleModel(_map);
+
+		// Определение связей между Фасадом и объектами моделей
+		_modelFacade = new GameModelFacade(_map, _tadpole);
+		
+		// Определение связей между контроллером и фасадом моделей
+		_controller = new GameController(_modelFacade);
+
+	} 
+	catch (std::bad_alloc bad) {
+		// err log system
+	}
 }
 
 void GameBuilder::disposeObjects()
 {
+	delete _map;
+	delete _tadpole;
+	delete _modelFacade;
+	delete _controller;
 }
 
 /////////////////// Rating Builder //////////////////////

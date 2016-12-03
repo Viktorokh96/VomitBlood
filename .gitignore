@@ -1,4 +1,6 @@
 *.[ao]
 *.bak*
 *.swp
+*.vux
+*.lck
 
