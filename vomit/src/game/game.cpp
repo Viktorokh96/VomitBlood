@@ -10,7 +10,6 @@ int VomitGame::init()
 		_builder[menu] = new MenuBuilder;
 		_builder[rating] = new RatingBuilder;
 		_builder[setting] = new SettingBuilder;
-
 	} catch (std::bad_alloc bad) {
 		return -1;
 	}
@@ -20,7 +19,8 @@ int VomitGame::init()
 
 void VomitGame::start()
 {
-	_builder[menu]->build();
+	// Временно. Должно быть [menu] в самом начале!
+	_builder[game]->build();
 }
 
 void VomitGame::dispose()
