@@ -18,7 +18,8 @@ int VomitGame::init()
 
 void VomitGame::start()
 {
-	_builder[menu]->build();
+	// Временно. Должно быть [menu] в самом начале!
+	_builder[game]->build();
 }
 
 void VomitGame::dispose()
