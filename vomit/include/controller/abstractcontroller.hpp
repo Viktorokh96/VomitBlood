@@ -12,7 +12,8 @@
 class AbstractController {
 public:
 	virtual ~AbstractController() {}
-	virtual void manage() = 0;
+	virtual void init() = 0;
+	virtual void dispose() = 0;
 };
 
 #include "gamecontroller.hpp"

@@ -1,10 +1,10 @@
 #include <iostream>
-#include <vomitgame.hpp>
+#include <vomitblood.hpp>
 using namespace std;
 
 int main()
 {
-	VomitGame game;
+	Application game;
 
 	if( game.init() < 0 )
 		cerr << "Ошибка инициализации!\n";

@@ -3,14 +3,13 @@
 
 #include "controller/vomitcontroller.hpp"
 #include "model/vomitmodel.hpp"
-#include "build/vomitbuilder.hpp"
 
 /*
- * VomitGame - главный класс игры
+ * Application - главный класс игры
  * Его задача заключается в полном обслуживании 
  * процесса игры, а именно:
  * 	init() - Подготовка системного окружения к началу игры
- * 	start() - Передача управления построителям (Builder) игры
+ * 	start() - Передача управления контроллеру (Меню)
  * 	dispose() - Окончательное освобождение всех игровых ресурсов
  *
  * Следует создавать лишь один экземпляр этого класса для работы игры
@@ -26,9 +25,7 @@
  * 		return 0;
  * 	}
 */
-class VomitGame {
-	static const int _buildQuantity = 4;
-	AbstractBuilder *_builder[_buildQuantity];
+class Application {
 public:
 	int init();
 	void start();
