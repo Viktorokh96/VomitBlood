@@ -11,7 +11,7 @@
 */
 class IController {
 public:
-	virtual ~IController() = 0;
+	virtual ~IController() {};
 	virtual void init() = 0;
 	virtual void dispose() = 0;
 };

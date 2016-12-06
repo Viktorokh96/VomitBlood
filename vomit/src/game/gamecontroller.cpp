@@ -8,3 +8,7 @@ using namespace std;
 GameController::GameController()
 {
 }
+
+GameController::~GameController() 
+{
+}

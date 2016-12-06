@@ -9,8 +9,11 @@ class GameController : public IController {
 	// представление
 public:
 	GameController();
-	~GameController() {} 
-	void manage();
+	~GameController();
+
+	void tadpoleMakeStep();
+	void tadpoleCollide();
+	void pause();
 };
 
 #endif
