@@ -1,8 +1,8 @@
 #ifndef _VOMITGAME
 #define _VOMITGAME 1
 
-#include "controller/vomitcontroller.hpp"
-#include "model/vomitmodel.hpp"
+#include "game/controller.hpp"
+#include "game/model.hpp"
 
 /*
  * Application - главный класс игры

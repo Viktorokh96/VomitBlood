@@ -7,7 +7,7 @@ INCLUDE = -I./vomit/include
 LIBS = 
 
 # Направление поиска исходных файлов для make
-vpath %.cpp ./vomit/src/ ./vomit/src/game/ ./vomit/src/model/ ./vomit/src/controller/ 
+vpath %.cpp ./vomit/src/ ./vomit/src/game/ ./vomit/src/application/
 # Направление поиска заголовочных файлов для make
 vpath %.hpp ./vomit/include/
 # Установка флагов для компиляции объектных файлов
@@ -21,10 +21,10 @@ LDFLAGS = $(LIBS)
 # Объектные файлы
 # Пример: MAINOBJ = framework.o
 
-MAINOBJ = vomitblood.o
-VGAMEOBJ = game.o
-VMODELOBJ = model.o
-VCONTROBJ = controller.o
+MAINOBJ = main.o
+VGAMEOBJ = application.o
+VMODELOBJ = gamemodel.o
+VCONTROBJ = gamecontroller.o
 
 ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ)
 
