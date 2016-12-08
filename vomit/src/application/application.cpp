@@ -1,6 +1,8 @@
 #include <vomitblood.hpp>
 #include <new>
 
+sf::RenderWindow window(sf::VideoMode(800, 800), "VomitBlood", sf::Style::Titlebar | sf::Style::Close);
+
 int Application::init()
 {
 	try {

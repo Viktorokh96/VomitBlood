@@ -1,14 +1,19 @@
 #include <vomitblood.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <new>
 using namespace std;
 
 ////////////////////// GameController //////////////////////
 
 GameController::GameController()
 {
-	_model = new GameModel();
-	_view = new GameView();
+	try {
+		_model = new GameModel();
+		_view = new GameView();
+	} catch (bad_alloc bad) {
+		return;
+	}
 }
 
 /*

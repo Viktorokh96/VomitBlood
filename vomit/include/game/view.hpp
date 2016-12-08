@@ -11,15 +11,15 @@ public:
 	void update();
 	bool isCollide();
 	
-    	unsigned int getPointCount() const;
+	std::size_t getPointCount() const;
     	Vector2f getPoint(unsigned int index) const;
 };
 
 class Obstacle : public sf::Shape {
 	VertexArray _vertices;
 public:
-	unsigned int getPointCount() const;
-    	Vector2f getPoint(unsigned int index) const;
+	std::size_t getPointCount() const;
+    	Vector2f getPoint(std::size_t index) const;
 };
 
 /*

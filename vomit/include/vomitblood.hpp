@@ -8,10 +8,9 @@ typedef int cmd_t;
 #include "game/view.hpp"
 #include "game/controller.hpp"
 #include "game/model.hpp"
-//
+
 // Создаем главное окно приложения
-sf::RenderWindow window(sf::VideoMode(800, 800), "VomitBlood", sf::Style::Titlebar | sf::Style::Close);
-sf::CircleShape circle;
+extern sf::RenderWindow window;
 
 /*
  * Application - главный класс игры
