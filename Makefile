@@ -4,7 +4,7 @@ CC = g++
 INCLUDE = -I./vomit/include  
 
 # перечень подключаемых библиотек (например -lncurses)
-LIBS = 
+LIBS = -lsfml-window -lsfml-graphics -lsfml-system
 
 # Направление поиска исходных файлов для make
 vpath %.cpp ./vomit/src/ ./vomit/src/game/ ./vomit/src/application/
@@ -25,8 +25,9 @@ MAINOBJ = main.o
 VGAMEOBJ = application.o
 VMODELOBJ = gamemodel.o
 VCONTROBJ = gamecontroller.o
+VVIEW = gameview.o
 
-ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ)
+ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW)
 
 EXE := vomitblood
 
@@ -49,6 +50,9 @@ $(VMODELOBJ) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VCONTROBJ) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VVIEW) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 # Очистка директории от объектных файлов

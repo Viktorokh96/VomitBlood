@@ -1,8 +1,17 @@
 #ifndef _VOMITGAME
 #define _VOMITGAME 1
 
+#include <SFML/Graphics.hpp>
+
+typedef int cmd_t;
+
+#include "game/view.hpp"
 #include "game/controller.hpp"
 #include "game/model.hpp"
+//
+// Создаем главное окно приложения
+sf::RenderWindow window(sf::VideoMode(800, 800), "VomitBlood", sf::Style::Titlebar | sf::Style::Close);
+sf::CircleShape circle;
 
 /*
  * Application - главный класс игры
@@ -26,6 +35,7 @@
  * 	}
 */
 class Application {
+	GameController *_game;
 public:
 	int init();
 	void start();

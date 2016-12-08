@@ -4,7 +4,7 @@
 int Application::init()
 {
 	try {
-		// Создаётся контроллер меню
+
 	} catch (std::bad_alloc bad) {
 		return -1;
 	}

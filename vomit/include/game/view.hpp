@@ -1,8 +1,44 @@
 #ifndef _GAME_VIEW
 #define _GAME_VIEW 1
 
-#include <../iview.hpp>
-#include "controller.hpp"
+#include <SFML/Graphics.hpp>
+using namespace sf;
+
+class Tadpole : public sf::Shape {
+	VertexArray _vertices;
+public:
+	Tadpole();
+	void update();
+	bool isCollide();
+	
+    	unsigned int getPointCount() const;
+    	Vector2f getPoint(unsigned int index) const;
+};
+
+class Obstacle : public sf::Shape {
+	VertexArray _vertices;
+public:
+	unsigned int getPointCount() const;
+    	Vector2f getPoint(unsigned int index) const;
+};
+
+/*
+ * TODO:Толстые стенки в начале и в конце блока
+*/
+class PartOfMap {
+	std::vector<Obstacle> _obstacles;
+public:
+	void update();
+	void draw(RenderTarget& target, RenderStates states) const;
+};
+
+class Map : public sf::Drawable {
+	float _speed;
+	std::vector<PartOfMap> _parts;
+public:
+	void update();
+	void draw(RenderTarget& target, RenderStates states) const;
+};
 
 /*
  * Класс "Представление игры"
@@ -11,11 +47,14 @@
  * происходят в пределах View.
 */
 class GameView {
-	GameController * const _controller;
 public:
-	GameView( GameController * controller);
+	GameView();
 	~GameView();
 
+	cmd_t update();
+
 	void setSpeed(int);
-	void startGame();
+	void newGame();
 };
+
+#endif

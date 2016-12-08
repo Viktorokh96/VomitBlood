@@ -1,8 +1,6 @@
 #ifndef _GAME_MODEL
 #define _GAME_MODEL 1
 
-typedef int cmd_t;
-
 class GameModel {
 public:
 	GameModel();
