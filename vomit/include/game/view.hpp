@@ -54,6 +54,7 @@ public:
 	cmd_t update();
 
 	void setSpeed(int);
+	void setLevel(int);
 	void newGame();
 };
 

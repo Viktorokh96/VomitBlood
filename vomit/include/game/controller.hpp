@@ -13,13 +13,18 @@
 class GameController : public IController {
 	GameModel * _model;
 	GameView *_view;
+	bool _isRunning;
 
+	void processEvents();
 	void tadpoleMakeStep();
 	void tadpoleCollide();
 	void pause();
 public:
 	GameController();
 	~GameController();
+
+	void init();
+	void dispose();
 
 	void startGame();
 };
