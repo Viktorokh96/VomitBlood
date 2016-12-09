@@ -6,7 +6,7 @@ sf::RenderWindow window(sf::VideoMode(800, 800), "VomitBlood", sf::Style::Titleb
 int Application::init()
 {
 	try {
-
+		_game = new GameController();
 	} catch (std::bad_alloc bad) {
 		return -1;
 	}
@@ -16,8 +16,12 @@ int Application::init()
 
 void Application::start()
 {
+	_game->init();
+	_game->startGame();
+	_game->dispose();
 }
 
 void Application::dispose()
 {
+	delete _game;
 }
