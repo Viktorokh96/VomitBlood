@@ -1,15 +1,15 @@
 # Имя компилятора
 CC = g++ 
 # Указание компилятору на поиск заголовочных файлов
-INCLUDE = -I./include  
+INCLUDE = -I./vomit/include  
 
 # перечень подключаемых библиотек (например -lncurses)
-LIBS = 
+LIBS = -lsfml-window -lsfml-graphics -lsfml-system
 
 # Направление поиска исходных файлов для make
-vpath %.cpp 
+vpath %.cpp ./vomit/src/ ./vomit/src/game/ ./vomit/src/application/
 # Направление поиска заголовочных файлов для make
-vpath %.h 
+vpath %.hpp ./vomit/include/
 # Установка флагов для компиляции объектных файлов
 FLAGS = -Wall -c -g -std=c++98 $(INCLUDE)
 # Установка флагов для линковщика
@@ -21,7 +21,13 @@ LDFLAGS = $(LIBS)
 # Объектные файлы
 # Пример: MAINOBJ = framework.o
 
-ALLOBJ	= $(MAINOBJ) 
+MAINOBJ = main.o
+VGAMEOBJ = application.o
+VMODELOBJ = gamemodel.o
+VCONTROBJ = gamecontroller.o
+VVIEW = gameview.o
+
+ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW)
 
 EXE := vomitblood
 
@@ -33,6 +39,21 @@ $(EXE) : $(ALLOBJ)
 # $< - переменная хранящая первый параметр строки пререквизита
 # Пример: $(MAINOBJ) : $(MAINSRC)
 #		$(CC) $< $(FLAGS) -o $@
+
+$(MAINOBJ) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VGAMEOBJ) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VMODELOBJ) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VCONTROBJ) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VVIEW) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
 
 # Очистка директории от объектных файлов
 .PHONY: clean
