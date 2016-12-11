@@ -1,6 +1,7 @@
 #ifndef _GAME_CONTROLLER
 #define _GAME_CONTROLLER 1
 
+#include "../cmd.hpp" 
 #include "../icontroller.hpp" 
 #include "model.hpp" 
 #include "view.hpp" 

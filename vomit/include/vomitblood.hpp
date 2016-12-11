@@ -3,30 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-typedef struct _cmd {
-	struct  {
-		unsigned tadpoleCollide:1;
-		unsigned tadpoleStep:1;
-		unsigned gameOver:1;
-		unsigned exitGame:1;
-		unsigned addVelocity:1;
-		unsigned addLevel:1;
-	} status;
-
-	int value;
-
-	void clear()
-	{
-		status.tadpoleCollide = 0;
-		status.tadpoleStep = 0;
-		status.gameOver = 0;
-		status.exitGame = 0;
-		status.addVelocity = 0;
-		status.addLevel = 0;
-		value = 0;
-	}
-} cmd_t;
-
 #include "game/view.hpp"
 #include "game/controller.hpp"
 #include "game/model.hpp"

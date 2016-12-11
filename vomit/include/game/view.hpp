@@ -1,6 +1,8 @@
 #ifndef _GAME_VIEW
 #define _GAME_VIEW 1
 
+#include "../cmd.hpp"
+
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
@@ -51,10 +53,11 @@ public:
 	GameView();
 	~GameView();
 
-	cmd_t update();
+	cmd_t update(sf::Time dt);
+	void render();
 
-	void setSpeed(int);
-	void setLevel(int);
+	void addVelocity();
+	void addLevel();
 	void newGame();
 };
 
