@@ -10,15 +10,19 @@ GameView::~GameView()
 {
 }
 
-void GameView::setSpeed(int speed)
+void GameView::addVelocity()
 {
 }
 
-void GameView::setLevel(int level)
+void GameView::addLevel()
 {
 }
 
-cmd_t GameView::update()
+void GameView::render()
+{
+}
+
+cmd_t GameView::update(sf::Time dt)
 {
 	cmd_t retCmd;
 	retCmd.clear();
@@ -28,14 +32,14 @@ cmd_t GameView::update()
 	framesPerStep--;
 
 	if(!framesPerStep) {
-		retCmd.status.tadpoleStep = 1;
+		retCmd.tadpoleStep = 1;
 		framesPerStep = 60;
 	}
 
 	int r = rand();
 	/* Тестовая эмуляция ошибки игрока */
 	if((r % 332394) == 0)
-		retCmd.status.tadpoleCollide = 1;
+		retCmd.tadpoleCollide = 1;
 
 	window.clear();
 	window.display();

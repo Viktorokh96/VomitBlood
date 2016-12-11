@@ -18,12 +18,11 @@ cmd_t GameModel::tadpoleMakeStep()
 	_stepsCounter++;
 
 	if ((_stepsCounter % (VELOCITY_ADD_STEPS-1)) == 0) {
-		retCmd.status.addVelocity = 1;
-		retCmd.value = 1;
+		retCmd.addVelocity = 1;
 	}
 
 	if (_stepsCounter == (LEVEL_ADD_STEPS-1)) {
-		retCmd.status.addLevel = 1;
+		retCmd.addLevel = 1;
 		_stepsCounter = 0;
 	}
 
@@ -35,7 +34,7 @@ cmd_t GameModel::tadpoleCollide()
 	cmd_t retCmd;
 	retCmd.clear();
 
-	retCmd.status.gameOver = 1;
+	retCmd.gameOver = 1;
 
 	return retCmd;
 }

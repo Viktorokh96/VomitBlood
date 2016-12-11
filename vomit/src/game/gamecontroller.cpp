@@ -19,6 +19,9 @@ void GameController::init()
 	} catch (bad_alloc bad) {
 		return;
 	}
+
+	// Создаём новый игровой мир, для начала игры
+	_view->newGame();
 }
 
 void GameController::processEvents()
@@ -38,7 +41,7 @@ void GameController::tadpoleCollide()
 	clog << "VIEW:tadpole Collide!" << endl;
 	cmd = _model->tadpoleCollide();
 
-	if (cmd.status.gameOver) {
+	if (cmd.gameOver) {
 		clog << "MODEL:GAME OVER!" << endl;
 		_isRunning = false;
 	}
@@ -51,31 +54,70 @@ void GameController::tadpoleMakeStep()
 	clog << "VIEW:tadpole steps!" << endl;
 	cmd = _model->tadpoleMakeStep();
 
-	if (cmd.status.addVelocity) {
+	if (cmd.addVelocity) {
 		clog << "MODEL:map add velocity!" << endl;
-		_view->setSpeed(cmd.value);
+		_view->addVelocity();
 	}
-	if (cmd.status.addLevel) {
+	if (cmd.addLevel) {
 		clog << "MODEL:map add level!" << endl;
+		_view->addLevel();
 	}
 }
 
 /*
  * Основной цикл игры
+ *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ * TimePerFrame - время выделенное на физический кадр (dt) игры ( 1/60 = 16,6 ms )
+ * 	Это значит что просчёт столкновении и передвижении будет производится 60
+ * 	раз в секунду на любом компьютере в независимост от его производительности.
+ *	Хочу подчернкуть что FPS может гулять в любых пределах, но только не dt!
+ *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ * timeSinceLastUpdate - время пройденное с последнего обновления
+ * 	просчёта игровых передвижений.
+ *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ * _view->render() - непосредственный рендер игрового поля. Очень медленная операция.
+ * 	Если не использовать нижеприведенный механизм, то физика игры будет сильно
+ * 	зависеть от аппаратных ресурсов компьютера, на котором запущена игра, что 
+ * 	очень не хорошо.
+ * \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
 void GameController::startGame()
 {
+	// Установка постоянного значения длительности кадра
+	sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
+
+	// Инициализация таймера
+	sf::Clock clock;
+	sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
 	cmd_t cmd;
 	while(_isRunning) {
 		
+		// Обработка событий, пришедших от пользователя
 		processEvents();
 
-		cmd = _view->update();
+		// Узнаём сколько времени прошло с окончания предыдущей итерации просчёта
+		// И заодно перезапускаем таймер для нового подсчёта
+		timeSinceLastUpdate += clock.restart();
 
-		if (cmd.status.tadpoleCollide)
-			tadpoleCollide();
-		if (cmd.status.tadpoleStep)
-			tadpoleMakeStep();
+		// Если с окончания предыдущей итерации прошло много времени для
+		// игрового движка, то наверстываем упущенное ( убираем лаги )
+		while (timeSinceLastUpdate > TimePerFrame) {
+			timeSinceLastUpdate -= TimePerFrame;
+
+			processEvents();
+
+			// Производим новый расчёт положений и столкновений объектов игры
+			cmd = _view->update(TimePerFrame);
+
+			if (cmd.tadpoleCollide)
+				tadpoleCollide();
+			if (cmd.tadpoleStep)
+				tadpoleMakeStep();
+		}
+		
+		// Производим рендер игрового поля
+		_view->render();
 	}
 }
 
