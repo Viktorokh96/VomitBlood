@@ -1,7 +1,7 @@
 #include <vomitblood.hpp>
 #include <new>
 
-sf::RenderWindow window(sf::VideoMode(800, 800), "VomitBlood", sf::Style::Titlebar | sf::Style::Close);
+sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "VomitBlood", sf::Style::Titlebar | sf::Style::Close);
 
 int Application::init()
 {

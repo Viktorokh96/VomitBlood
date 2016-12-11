@@ -1,27 +1,53 @@
 #include <vomitblood.hpp>
+#include <new>
 #include <iostream>
 using namespace std;
 
 GameView::GameView() 
 {
+	try {
+		_map = new Map();
+		_tadpole = new Tadpole();
+	} catch (bad_alloc bad) {
+		return;
+	}
+}
+
+void GameView::newGame()
+{
+	_map->newMap();
+	_map->setVelocity(START_MAP_VELOCITY);
 }
 
 GameView::~GameView()
 {
+	delete _map;
+	delete _tadpole;
 }
 
 void GameView::addVelocity()
 {
+	_map->setVelocity(_map->getVelocity()+VELOCITY_INCREMENT);
 }
 
 void GameView::addLevel()
 {
 }
 
-void GameView::render()
+void GameView::draw()
 {
+	window.clear();
+
+	_map->draw();
+	window.draw(*_tadpole);
+
+	window.display();
 }
 
+/*
+ * Метод перерасчёта позиции и столковении
+ * значение dt - секунды (float)
+*/
 cmd_t GameView::update(sf::Time dt)
 {
 	cmd_t retCmd;
@@ -36,17 +62,12 @@ cmd_t GameView::update(sf::Time dt)
 		framesPerStep = 60;
 	}
 
-	int r = rand();
-	/* Тестовая эмуляция ошибки игрока */
-	if((r % 332394) == 0)
-		retCmd.tadpoleCollide = 1;
+	_map->update(dt);
+	_tadpole->update(dt);
 
-	window.clear();
-	window.display();
+	if(_tadpole->isCollide())
+		retCmd.tadpoleCollide = 1;
 
 	return retCmd;
 }
 
-void GameView::newGame()
-{
-}

@@ -2,9 +2,6 @@
 #include <iostream>
 using namespace std;
 
-#define VELOCITY_ADD_STEPS 	100
-#define LEVEL_ADD_STEPS 	1000
-
 GameModel::GameModel()
 {
 	_stepsCounter = 0;

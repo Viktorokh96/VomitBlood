@@ -3,6 +3,15 @@
 
 #include <SFML/Graphics.hpp>
 
+#define VELOCITY_ADD_STEPS 	5
+#define LEVEL_ADD_STEPS 	50
+
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 800
+
+#define START_MAP_VELOCITY 200
+#define VELOCITY_INCREMENT 20
+
 #include "game/view.hpp"
 #include "game/controller.hpp"
 #include "game/model.hpp"

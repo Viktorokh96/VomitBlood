@@ -26,14 +26,16 @@ VGAMEOBJ = application.o
 VMODELOBJ = gamemodel.o
 VCONTROBJ = gamecontroller.o
 VVIEW = gameview.o
+VMAP = gamemap.o
+VTADPOLE = gametadpole.o
 
-ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW)
+ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE)
 
 EXE := vomitblood
 
 all: $(EXE)
 
-$(EXE) : $(ALLOBJ)
+$(EXE) : $(ALLOBJ) 
 		$(CC) $^ $(LDFLAGS) -o $@
 
 # $< - переменная хранящая первый параметр строки пререквизита
@@ -53,6 +55,12 @@ $(VCONTROBJ) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VVIEW) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VMAP) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VTADPOLE) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 # Очистка директории от объектных файлов
