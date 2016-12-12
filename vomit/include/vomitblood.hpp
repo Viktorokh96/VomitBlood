@@ -7,10 +7,14 @@
 #define LEVEL_ADD_STEPS 	50
 
 #define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 800
+#define WINDOW_HEIGHT 700
+
+#define PART_HEIGHT 1400
 
 #define START_MAP_VELOCITY 200
 #define VELOCITY_INCREMENT 20
+
+#define REDIGITY 5
 
 #include "game/view.hpp"
 #include "game/controller.hpp"

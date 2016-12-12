@@ -7,7 +7,7 @@ GameView::GameView()
 {
 	try {
 		_map = new Map();
-		_tadpole = new Tadpole();
+		_tadpole = new Tadpole(_map);
 	} catch (bad_alloc bad) {
 		return;
 	}
@@ -17,6 +17,7 @@ void GameView::newGame()
 {
 	_map->newMap();
 	_map->setVelocity(START_MAP_VELOCITY);
+	_tadpole->goToStart();
 }
 
 GameView::~GameView()
@@ -63,7 +64,7 @@ cmd_t GameView::update(sf::Time dt)
 	}
 
 	_map->update(dt);
-	_tadpole->update(dt);
+	_tadpole->updatePosition(dt);
 
 	if(_tadpole->isCollide())
 		retCmd.tadpoleCollide = 1;

@@ -1,5 +1,21 @@
 #include <vomitblood.hpp>
 #include <iostream>
+using namespace std;
+
+class MVector2f : public sf::Vector2<float> {
+public:
+	MVector2f(sf::Vector2f f, sf::Vector2f s)
+	{
+		x = s.x - f.x;
+		y = s.y - f.y;
+	}
+
+	float operator*(MVector2f v2)
+	{
+		return (x * v2.y) - (v2.x * y);
+	}
+};
+
 /////////////////////////////////// Obstacle ////////////////////////////////////
 
 Obstacle::Obstacle()
@@ -41,26 +57,94 @@ Vector2f Obstacle::getPoint(std::size_t index) const
 	return _vertices[index].position;
 }
 
+bool linesIntersects(sf::Vector2f l1[2], sf::Vector2f l2[2])
+{
+	float x1, x2, x3, x4;	
+	float y1, y2, y3, y4;	
+
+	// Быстрая проверка на пересечение квадратов 
+	// диагоналями которых являются отрезки
+
+	x1 = min(l1[0].x, l1[1].x);
+	x2 = max(l1[0].x, l1[1].x);
+	x3 = min(l2[0].x, l2[1].x);
+	x4 = max(l2[0].x, l2[1].x);
+
+	y1 = min(l1[0].y, l1[1].y);
+	y2 = max(l1[0].y, l1[1].y);
+	y3 = min(l2[0].y, l2[1].y);
+	y4 = max(l2[0].y, l2[1].y);
+
+ 	//Если пересечение обнаружено - уточняем его
+	if ((x2 >= x3) && (x4 >= x1) && (y2 >= y3) && (y4 > y1)) {		
+		MVector2f v1(l1[0], l2[0]);	
+		MVector2f v2(l1[0], l2[1]);	
+		MVector2f v3(l1[0], l1[1]);	
+
+		if ((v1*v3) * (v2*v3) <= 0) {
+			v1 = MVector2f(l2[0], l1[0]);
+			v2 = MVector2f(l2[0], l1[1]);
+			v3 = MVector2f(l2[0], l2[1]);
+			if ((v1*v3) * (v2*v3) <= 0)
+				return true;		// Пересечение есть!
+		}
+	}
+
+	return false;
+}
+
+bool Obstacle::isCollide(const sf::Shape &obj) const
+{
+	FloatRect objRect = obj.getGlobalBounds();
+	FloatRect obstacleRect = getGlobalBounds();
+
+	// Если пересекаются внешние квадраты - уточняем пересечение
+	if(objRect.intersects(obstacleRect)) {
+		int objCount = obj.getPointCount();	
+		int obstacleCount = getPointCount();	
+		
+		for (int i = 0; i < objCount-1; ++i) {
+			sf::Vector2f _objLine[2] =
+			{
+				obj.getPoint(i) + obj.getPosition(),
+				obj.getPoint(i+1) + obj.getPosition()
+			};
+			for(int j = 0; j < obstacleCount; ++j) {
+				sf::Vector2f _obstLine[2] =
+				{
+					getPoint(j) + getPosition(),
+					getPoint(j+1) + getPosition()
+				};
+				if(linesIntersects(_objLine, _obstLine))
+					return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 /////////////////////////////////// PartOfMap ////////////////////////////////////
 
 PartOfMap::PartOfMap(float position) 
-: _boundary(sf::FloatRect(0,0, WINDOW_WIDTH, WINDOW_HEIGHT))
 {
-	_position = sf::Vector2f(0,position);
+	_position = position;
 	_obstacles.clear();
 
 	Obstacle ob1, ob2, ob3, ob4, ob5;
 	ob1.setInMapPosition(0, 0);
 	ob2.setInMapPosition(WINDOW_WIDTH-80, 0);
-	ob3.setInMapPosition(0,WINDOW_HEIGHT-80);
-	ob4.setInMapPosition(WINDOW_WIDTH-80,WINDOW_HEIGHT-80);
-	ob5.setInMapPosition((WINDOW_WIDTH/2)-40,(WINDOW_HEIGHT/2)-40);
+	ob3.setInMapPosition(0,PART_HEIGHT-80);
+	ob4.setInMapPosition(WINDOW_WIDTH-80,PART_HEIGHT-80);
+	ob5.setInMapPosition((WINDOW_WIDTH/2)-40,(PART_HEIGHT/2)-40);
 
 	_obstacles.push_back(ob1);
 	_obstacles.push_back(ob2);
 	_obstacles.push_back(ob3);
 	_obstacles.push_back(ob4);
 	_obstacles.push_back(ob5);
+
+	updateObstacles();
 }
 
 PartOfMap::~PartOfMap()
@@ -72,34 +156,39 @@ void PartOfMap::updateObstacles()
 {
 	std::vector<Obstacle>::iterator it = _obstacles.begin();
 	while(it != _obstacles.end()) {
-		it->setPosition(_position + it->getInMapPosition());
+
+		it->setPosition
+		(
+			it->getInMapPosition().x,
+			_position + it->getInMapPosition().y
+		);
+
 		it++;
 	}
 }
 
-void PartOfMap::setPosition(sf::Vector2f &pos)
+void PartOfMap::setPosition(float position)
 {
-	_position = sf::Vector2f(pos);
+	_position = position;
 
 	updateObstacles();
-}
-
-void PartOfMap::setPosition(float x, float y)
-{
-	sf::Vector2f vect(x,y);
-	setPosition(vect);
 }
 
 float PartOfMap::getPosition()
 {
-	return _position.y;
+	return _position;
 }
 
 void PartOfMap::update(float distance)
 {
-	_position.y += distance;
+	_position += distance;
 
-	updateObstacles();
+	std::vector<Obstacle>::iterator it = _obstacles.begin();
+	while(it != _obstacles.end()) 
+	{
+		it->move(sf::Vector2f(0, distance));
+		it++;
+	}
 }
 
 void PartOfMap::draw() const
@@ -109,6 +198,18 @@ void PartOfMap::draw() const
 		window.draw(*it);
 		it++;
 	}
+}
+
+bool PartOfMap::isCollide(const sf::Shape &obj) const
+{
+	std::vector<Obstacle>::const_iterator it = _obstacles.begin();
+	while(it != _obstacles.end()) {
+		if(it->isCollide(obj))
+			return true;
+		it++;
+	}
+
+	return false;
 }
 
 ////////////////////////////////////// Map ///////////////////////////////////////
@@ -126,8 +227,9 @@ Map::~Map()
 
 void Map::newMap()
 {
-	_parts.push_back(PartOfMap(0));
-	_parts.push_back(PartOfMap(-WINDOW_HEIGHT));
+	_parts.clear();
+	_parts.push_back(PartOfMap(WINDOW_HEIGHT-PART_HEIGHT));
+	_parts.push_back(PartOfMap(WINDOW_HEIGHT-(2*PART_HEIGHT)));
 }
 
 void Map::update(sf::Time dt)
@@ -140,10 +242,9 @@ void Map::update(sf::Time dt)
 	}
 
 	if(_parts.begin()->getPosition() > WINDOW_HEIGHT) {
-		_parts.push_back(PartOfMap(_parts.rbegin()->getPosition()-WINDOW_HEIGHT));
+		_parts.push_back(PartOfMap(_parts.rbegin()->getPosition()-PART_HEIGHT));
 		_parts.erase(_parts.begin());
-		std::clog << "NEW PART PASTED!" << std::endl;
-		std::clog << _parts.size() << std::endl;
+//DEBUG		std::clog << "NEW PART PASTED!" << std::endl;
 	}
 }
 
@@ -164,4 +265,16 @@ void Map::setVelocity(float vel)
 float Map::getVelocity()
 {
 	return _velocity;
+}
+
+bool Map::isCollide(const sf::Shape &obj) const
+{
+	std::vector<PartOfMap>::const_iterator it = _parts.begin();
+	while(it != _parts.end()) {
+		if(it->isCollide(obj))
+			return true;
+		it++;
+	}
+
+	return false;
 }

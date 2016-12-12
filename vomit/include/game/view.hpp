@@ -6,12 +6,16 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
+class Map;
+
 class Tadpole : public sf::Shape {
 	VertexArray _vertices;
+	Map *_map;
 public:
-	Tadpole();
+	Tadpole(Map *map);
 	~Tadpole();
-	void update(sf::Time dt);
+	void updatePosition(sf::Time dt);
+	void goToStart();
 	bool isCollide();
 	
 	std::size_t getPointCount() const;
@@ -31,6 +35,8 @@ public:
 
 	std::size_t getPointCount() const;
     	Vector2f getPoint(std::size_t index) const;
+
+	bool isCollide(const sf::Shape &) const;
 };
 
 /*
@@ -39,8 +45,7 @@ public:
 */
 class PartOfMap {
 	std::vector<Obstacle> _obstacles;
-	FloatRect _boundary;
-	sf::Vector2f _position;
+	float _position;
 
 	void updateObstacles();
 public:
@@ -48,11 +53,12 @@ public:
 	~PartOfMap();
 	void update(float distance);
 
-	void setPosition(sf::Vector2f &pos);
-	void setPosition(float x, float y);
+	void setPosition(float position);
 	float getPosition();
 
 	void draw() const;
+
+	bool isCollide(const sf::Shape &) const;
 };
 
 /*
@@ -77,6 +83,8 @@ public:
 
 	void update(sf::Time dt);
 	void draw() const;
+
+	bool isCollide(const sf::Shape &) const;
 };
 
 /*
