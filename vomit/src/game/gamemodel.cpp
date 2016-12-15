@@ -5,6 +5,7 @@ using namespace std;
 GameModel::GameModel()
 {
 	_stepsCounter = 0;
+	_points = 0;
 }
 
 cmd_t GameModel::tadpoleMakeStep()
@@ -13,6 +14,7 @@ cmd_t GameModel::tadpoleMakeStep()
 	retCmd.clear();
 
 	_stepsCounter++;
+	_points++;
 
 	if ((_stepsCounter % (VELOCITY_ADD_STEPS-1)) == 0) {
 		retCmd.addVelocity = 1;
@@ -34,6 +36,15 @@ cmd_t GameModel::tadpoleCollide()
 	retCmd.gameOver = 1;
 
 	return retCmd;
+}
+
+unsigned GameModel::getPoints()
+{
+	return _points;
+}
+
+void GameModel::savePoints()
+{
 }
 
 GameModel::~GameModel()

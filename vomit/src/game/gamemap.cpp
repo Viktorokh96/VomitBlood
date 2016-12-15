@@ -218,6 +218,7 @@ Map::Map()
 {
 	_parts.clear();
 	_velocity = 0;
+	_level = 0;
 }
 
 Map::~Map()
@@ -265,6 +266,16 @@ void Map::setVelocity(float vel)
 float Map::getVelocity()
 {
 	return _velocity;
+}
+
+void Map::setLevel(int level)
+{
+	_level = level;
+}
+
+int Map::getLevel()
+{
+	return _level;
 }
 
 bool Map::isCollide(const sf::Shape &obj) const

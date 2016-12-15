@@ -10,6 +10,8 @@ typedef struct _cmd {
 	unsigned tadpoleStep:1;
 	unsigned gameOver:1;
 	unsigned exitGame:1;
+	unsigned restart:1;
+	unsigned resume:1;
 	unsigned addVelocity:1;
 	unsigned addLevel:1;
 
@@ -22,9 +24,13 @@ typedef struct _cmd {
 		exitGame = 0;
 		addVelocity = 0;
 		addLevel = 0;
+		restart = 0;
+		resume = 0;
 	}
 } cmd_t;
 
+
+enum gameStatus { gamePause , gameOver };
 
 
 #endif

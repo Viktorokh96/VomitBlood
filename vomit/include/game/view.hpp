@@ -62,15 +62,15 @@ public:
 };
 
 /*
- * TODO: Заменить vector<PartOfMap> на
- * queue<PartOfMap>.
- * Очередь наиболее правильная структура
- * на мой взгляд. Потому что она всегда
- * заполняется с одной стороны и 
- * высвобождается с противоположной.
+ * Класс "Карта" - отвечает за перерисовку
+ * карты игры, за скорость, уровень и 
+ * создание и удаление своих частей
+ * из случайных компонентов "Часть карты"
+ * для генерации бесконечной карты
 */
 class Map {
 	float _velocity;
+	int _level;
 	std::vector<PartOfMap> _parts;
 public:
 	Map();
@@ -80,6 +80,9 @@ public:
 	
 	void setVelocity(float);
 	float getVelocity();
+
+	void setLevel(int);
+	int getLevel();
 
 	void update(sf::Time dt);
 	void draw() const;
@@ -96,6 +99,8 @@ public:
 class GameView {
 	Map * _map;	
 	Tadpole *_tadpole;
+
+	void newGame();
 public:
 	GameView();
 	~GameView();
@@ -105,7 +110,22 @@ public:
 
 	void addVelocity();
 	void addLevel();
-	void newGame();
+};
+
+class GameMenuView {
+	int _status;
+	unsigned _points;
+	void showStatus();
+	void showPoints();
+public:
+	GameMenuView();
+	~GameMenuView();
+
+	cmd_t update();
+	void draw();
+
+	void setPoints(unsigned);
+	void setGameStatus(gameStatus);
 };
 
 #endif

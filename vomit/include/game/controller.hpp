@@ -6,20 +6,39 @@
 #include "model.hpp" 
 #include "view.hpp" 
 
+class GameMenuController : public IController {
+	GameMenuView *_view;
+	bool _isRunning;
+	void processEvents();
+public:
+	GameMenuController();
+	~GameMenuController();
+
+	void setGameStatus(gameStatus);
+	void init();
+	void dispose();
+
+	void setPoints(unsigned);
+
+	cmd_t startMenu();
+};
+
 /*
  * Контроллер игры
- * Главный цикл находится здесь
+ * Главный игровой цикл находится здесь
 */
 
 class GameController : public IController {
 	GameModel * _model;
 	GameView *_view;
-	bool _isRunning;
+	GameMenuController *_menu;
+	bool _gameLoopisRunning;
 
 	void processEvents();
+	void createNewGame();
 	void tadpoleMakeStep();
 	void tadpoleCollide();
-	void pause();
+	void mainGameLoop();
 public:
 	GameController();
 	~GameController();

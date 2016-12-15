@@ -5,12 +5,15 @@
 
 class GameModel {
 	unsigned int _stepsCounter;
+	unsigned int _points;
 public:
 	GameModel();
 	~GameModel();
-	
+
 	cmd_t tadpoleMakeStep();
 	cmd_t tadpoleCollide();
+	unsigned getPoints();
+	void savePoints();
 };
 
 #endif
