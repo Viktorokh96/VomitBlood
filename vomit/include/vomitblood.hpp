@@ -3,29 +3,21 @@
 
 #include <SFML/Graphics.hpp>
 
-typedef struct _cmd {
-	struct  {
-		unsigned tadpoleCollide:1;
-		unsigned tadpoleStep:1;
-		unsigned gameOver:1;
-		unsigned exitGame:1;
-		unsigned addVelocity:1;
-		unsigned addLevel:1;
-	} status;
+#define UPDATES_PER_STEP 	60
 
-	int value;
+#define VELOCITY_ADD_STEPS 	5
+#define LEVEL_ADD_STEPS 	50
 
-	void clear()
-	{
-		status.tadpoleCollide = 0;
-		status.tadpoleStep = 0;
-		status.gameOver = 0;
-		status.exitGame = 0;
-		status.addVelocity = 0;
-		status.addLevel = 0;
-		value = 0;
-	}
-} cmd_t;
+#define WINDOW_WIDTH 		800
+#define WINDOW_HEIGHT 		700
+
+#define PART_HEIGHT 		1400
+
+#define START_MAP_VELOCITY 	200
+#define START_MAP_LEVEL 	1
+#define VELOCITY_INCREMENT 	20
+
+#define REDIGITY 		5
 
 #include "game/view.hpp"
 #include "game/controller.hpp"

@@ -2,12 +2,10 @@
 #include <iostream>
 using namespace std;
 
-#define VELOCITY_ADD_STEPS 	100
-#define LEVEL_ADD_STEPS 	1000
-
 GameModel::GameModel()
 {
 	_stepsCounter = 0;
+	_points = 0;
 }
 
 cmd_t GameModel::tadpoleMakeStep()
@@ -16,14 +14,14 @@ cmd_t GameModel::tadpoleMakeStep()
 	retCmd.clear();
 
 	_stepsCounter++;
+	_points++;
 
 	if ((_stepsCounter % (VELOCITY_ADD_STEPS-1)) == 0) {
-		retCmd.status.addVelocity = 1;
-		retCmd.value = 1;
+		retCmd.addVelocity = 1;
 	}
 
 	if (_stepsCounter == (LEVEL_ADD_STEPS-1)) {
-		retCmd.status.addLevel = 1;
+		retCmd.addLevel = 1;
 		_stepsCounter = 0;
 	}
 
@@ -35,9 +33,18 @@ cmd_t GameModel::tadpoleCollide()
 	cmd_t retCmd;
 	retCmd.clear();
 
-	retCmd.status.gameOver = 1;
+	retCmd.gameOver = 1;
 
 	return retCmd;
+}
+
+unsigned GameModel::getPoints()
+{
+	return _points;
+}
+
+void GameModel::savePoints()
+{
 }
 
 GameModel::~GameModel()
