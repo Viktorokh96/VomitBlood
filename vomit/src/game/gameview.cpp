@@ -47,7 +47,7 @@ void GameMenuView::showStatus()
 	if(_status == gamePause)
 		status.setString("Pause");
 	else
-		status.setString("You loosed!");
+		status.setString("You died!");
 
 	sf::FloatRect b = status.getLocalBounds();
 
@@ -122,6 +122,7 @@ void GameView::newGame()
 	_map->setVelocity(START_MAP_VELOCITY);
 	_map->setLevel(START_MAP_LEVEL);
 	_tadpole->goToStart();
+	_tadpoleClicked = false;
 }
 
 GameView::~GameView()
@@ -159,20 +160,25 @@ cmd_t GameView::update(sf::Time dt)
 	cmd_t retCmd;
 	retCmd.clear();
 
-	static int updatesPerStep = UPDATES_PER_STEP;
+	if (_tadpoleClicked) {
+		static int updatesPerStep = UPDATES_PER_STEP;
 
-	updatesPerStep--;
+		updatesPerStep--;
 
-	if(!updatesPerStep) {
-		retCmd.tadpoleStep = 1;
-		updatesPerStep = UPDATES_PER_STEP;
+		if(!updatesPerStep) {
+			retCmd.tadpoleStep = 1;
+			updatesPerStep = UPDATES_PER_STEP;
+		}
+
+		_map->update(dt);
+		_tadpole->update(dt);
+
+		if(_tadpole->isCollide())
+			retCmd.tadpoleCollide = 1;
+	} else {
+		if(_tadpole->isClicked())
+			_tadpoleClicked = true;
 	}
-
-	_map->update(dt);
-	_tadpole->updatePosition(dt);
-
-	if(_tadpole->isCollide())
-		retCmd.tadpoleCollide = 1;
 
 	return retCmd;
 }

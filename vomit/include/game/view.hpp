@@ -8,20 +8,33 @@ using namespace sf;
 
 class Map;
 
+/*
+ * Класс "Головастик"
+ * протагонист этой игры.
+ * Управляется игроком
+*/
 class Tadpole : public sf::Shape {
 	VertexArray _vertices;
 	Map *_map;
 public:
 	Tadpole(Map *map);
 	~Tadpole();
-	void updatePosition(sf::Time dt);
+	void update(sf::Time dt);
 	void goToStart();
 	bool isCollide();
+	bool isClicked();
 	
 	std::size_t getPointCount() const;
     	Vector2f getPoint(std::size_t index) const;
 };
 
+/*
+ * Класс "Препятствие"
+ * антагонист этой игры.
+ * С ним может столкнутся головастик.
+ * Является шаблоном для самых различных
+ * видов препятствии
+*/
 class Obstacle : public sf::Shape {
 	VertexArray _vertices;
 	sf::Vector2f _inMapPosition;
@@ -101,6 +114,7 @@ class GameView {
 	Tadpole *_tadpole;
 
 	void newGame();
+	bool _tadpoleClicked;
 public:
 	GameView();
 	~GameView();
