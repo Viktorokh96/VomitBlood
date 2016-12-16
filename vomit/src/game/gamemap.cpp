@@ -109,7 +109,7 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 				obj.getPoint(i) + obj.getPosition(),
 				obj.getPoint(i+1) + obj.getPosition()
 			};
-			for(int j = 0; j < obstacleCount; ++j) {
+			for(int j = 0; j < obstacleCount-1; ++j) {
 				sf::Vector2f _obstLine[2] =
 				{
 					getPoint(j) + getPosition(),

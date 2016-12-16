@@ -102,6 +102,7 @@ GameController::GameController()
 {
 	_model = NULL;
 	_view = NULL;
+	_menu = NULL;
 }
 
 void GameController::init()
