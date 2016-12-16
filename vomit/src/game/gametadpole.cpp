@@ -1,6 +1,10 @@
 #include <vomitblood.hpp>
+#include <iostream>
 
 #define RADIUS 20
+
+#define TADPOLE_START_X 300
+#define TADPOLE_START_Y 600
 
 Tadpole::Tadpole(Map *map)
 : _map(map)
@@ -22,15 +26,23 @@ Tadpole::~Tadpole()
 
 void Tadpole::goToStart()
 {
-	setPosition(300, 600);
+	setPosition(TADPOLE_START_X, TADPOLE_START_Y);
 }
 
 void Tadpole::updatePosition(sf::Time dt)
 {
+	sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+	sf::Vector2f tadpolePosition = getPosition();
+	
+	/* Проверка от выхода за пределы верхней и нижней границы карты */
+	if (((tadpolePosition.y < 0) || (tadpolePosition.y > WINDOW_HEIGHT-2*RADIUS))
+	&& ((mousePosition.y < 0) || (mousePosition.y > WINDOW_HEIGHT-2*RADIUS)))
+		return;
+
 	sf::Vector2i velocity
 	(
-		REDIGITY*(sf::Mouse::getPosition(window).x-getPosition().x-RADIUS),
-		REDIGITY*(sf::Mouse::getPosition(window).y-getPosition().y-RADIUS)
+		REDIGITY*(mousePosition.x-tadpolePosition.x-RADIUS),
+		REDIGITY*(mousePosition.y-tadpolePosition.y-RADIUS)
 	);
 
 	float t = dt.asSeconds();

@@ -245,9 +245,7 @@ void Map::update(sf::Time dt)
 	if(_parts.begin()->getPosition() > WINDOW_HEIGHT) {
 		_parts.push_back(PartOfMap(_parts.rbegin()->getPosition()-PART_HEIGHT));
 		_parts.erase(_parts.begin());
-//DEBUG		std::clog << "NEW PART PASTED!" << std::endl;
-	}
-}
+	} }
 
 void Map::draw() const
 {

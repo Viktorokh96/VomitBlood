@@ -17,7 +17,7 @@
 #define START_MAP_LEVEL 	1
 #define VELOCITY_INCREMENT 	20
 
-#define REDIGITY 		5
+#define REDIGITY 		10
 
 #include "game/view.hpp"
 #include "game/controller.hpp"
