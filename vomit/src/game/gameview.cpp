@@ -155,7 +155,7 @@ void GameView::draw()
  * Метод перерасчёта позиции и столковении
  * значение dt - секунды (float)
 */
-cmd_t GameView::update(sf::Time dt)
+cmd_t GameView::update()
 {
 	cmd_t retCmd;
 	retCmd.clear();
@@ -170,8 +170,8 @@ cmd_t GameView::update(sf::Time dt)
 			updatesPerStep = UPDATES_PER_STEP;
 		}
 
-		_map->update(dt);
-		_tadpole->update(dt);
+		_map->update(_dt);
+		_tadpole->update(_dt);
 
 		if(_tadpole->isCollide())
 			retCmd.tadpoleCollide = 1;
@@ -181,5 +181,10 @@ cmd_t GameView::update(sf::Time dt)
 	}
 
 	return retCmd;
+}
+
+void GameView::setFrameTime(sf::Time dt)
+{
+	_dt = dt;
 }
 

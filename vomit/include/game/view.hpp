@@ -2,6 +2,7 @@
 #define _GAME_VIEW 1
 
 #include "../cmd.hpp"
+#include "../iview.hpp"
 
 #include <SFML/Graphics.hpp>
 using namespace sf;
@@ -109,9 +110,10 @@ public:
  * В целом вся визуализация и взаимодействие с пользователем
  * происходят в пределах View.
 */
-class GameView {
+class GameView : public IView {
 	Map * _map;	
 	Tadpole *_tadpole;
+	sf::Time _dt;
 
 	void newGame();
 	bool _tadpoleClicked;
@@ -119,14 +121,15 @@ public:
 	GameView();
 	~GameView();
 
-	cmd_t update(sf::Time dt);
+	cmd_t update();
 	void draw();
 
+	void setFrameTime(sf::Time dt);
 	void addVelocity();
 	void addLevel();
 };
 
-class GameMenuView {
+class GameMenuView : public IView {
 	int _status;
 	unsigned _points;
 	void showStatus();

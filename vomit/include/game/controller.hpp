@@ -2,21 +2,21 @@
 #define _GAME_CONTROLLER 1
 
 #include "../cmd.hpp" 
-#include "../icontroller.hpp" 
+#include "../acontroller.hpp" 
 #include "model.hpp" 
 #include "view.hpp" 
 
-class GameMenuController : public IController {
+class GameMenuController : public AController {
 	GameMenuView *_view;
-	bool _isRunning;
+	cmd_t retCmd;
+protected:
+	void processCommands(cmd_t cmd);
 	void processEvents();
 public:
 	GameMenuController();
 	~GameMenuController();
 
 	void setGameStatus(gameStatus);
-	void init();
-	void dispose();
 
 	void setPoints(unsigned);
 
@@ -28,23 +28,21 @@ public:
  * Главный игровой цикл находится здесь
 */
 
-class GameController : public IController {
+class GameController : public AController {
 	GameModel * _model;
 	GameView *_view;
 	GameMenuController *_menu;
-	bool _gameLoopisRunning;
 
-	void processEvents();
 	void createNewGame();
 	void tadpoleMakeStep();
 	void tadpoleCollide();
 	void mainGameLoop();
+protected:
+	void processCommands(cmd_t cmd);
+	void processEvents();
 public:
 	GameController();
 	~GameController();
-
-	void init();
-	void dispose();
 
 	void startGame();
 };

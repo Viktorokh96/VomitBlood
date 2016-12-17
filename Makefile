@@ -28,8 +28,9 @@ VCONTROBJ = gamecontroller.o
 VVIEW = gameview.o
 VMAP = gamemap.o
 VTADPOLE = gametadpole.o
+VACONTR = acontroller.o
 
-ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE)
+ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR)
 
 EXE := vomitblood
 
@@ -61,6 +62,9 @@ $(VMAP) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VTADPOLE) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VACONTR) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 # Очистка директории от объектных файлов

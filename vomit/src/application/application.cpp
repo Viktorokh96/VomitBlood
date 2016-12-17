@@ -16,9 +16,7 @@ int Application::init()
 
 void Application::start()
 {
-	_game->init();
 	_game->startGame();
-	_game->dispose();
 }
 
 void Application::dispose()
