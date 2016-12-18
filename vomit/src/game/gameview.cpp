@@ -1,13 +1,14 @@
 #include <cmd.hpp>
 #include <vomitblood.hpp>
 #include <new>
+#include <cmath>
 #include <iostream>
 #include <cstdlib>
 using namespace std;
 
 ////////////////////// GameMenuView //////////////////////
 
-sf::Font font;
+static sf::Font font;
 
 GameMenuView::GameMenuView()
 {
@@ -22,6 +23,9 @@ cmd_t GameMenuView::update()
 {
 	cmd_t retCmd;
 	retCmd.clear();
+
+	if(_status == windowClosed)
+		retCmd.exitGame = 1;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 		retCmd.exitGame = 1;
@@ -65,7 +69,7 @@ void GameMenuView::showPoints()
 	points.setStyle(sf::Text::Bold);
 
 	char score[64];
-	sprintf(score,"Your score is %d",_points);
+	sprintf(score,"Your score is %ld",_points);
 
 	points.setString(score);
 
@@ -76,7 +80,7 @@ void GameMenuView::showPoints()
 	window.draw(points);
 }
 
-void GameMenuView::setPoints(unsigned p)
+void GameMenuView::setPoints(unsigned long p)
 {
 	_points = p;
 }
@@ -151,6 +155,11 @@ void GameView::draw()
 	window.display();
 }
 
+void GameView::setPoints(unsigned long p)
+{
+	_map->setPoints(p);
+}
+
 /*
  * Метод перерасчёта позиции и столковении
  * значение dt - секунды (float)
@@ -176,8 +185,18 @@ cmd_t GameView::update()
 		if(_tadpole->isCollide())
 			retCmd.tadpoleCollide = 1;
 	} else {
-		if(_tadpole->isClicked())
+		if(_tadpole->isClicked()) {
+			_tadpole->setScale(1.f,1.f);
 			_tadpoleClicked = true;
+		}
+
+		/* Мерцание головастиком, для привлечения внимания игрока */
+		if(!_tadpoleClicked) {
+			static double a = 0.f;	
+			_tadpole->setScale(abs(cos(a)), abs(cos(a)));
+			a += 0.04f;
+			if(a > 1000) a = 0;
+		}
 	}
 
 	return retCmd;

@@ -1,5 +1,6 @@
 #include <vomitblood.hpp>
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 GameModel::GameModel()
@@ -14,15 +15,16 @@ cmd_t GameModel::tadpoleMakeStep()
 	retCmd.clear();
 
 	_stepsCounter++;
-	_points++;
+
+	/* Функция расчёта очков */
+	_points = (_stepsCounter*_stepsCounter)/(1 + (sqrt(_stepsCounter)));
 
 	if ((_stepsCounter % (VELOCITY_ADD_STEPS-1)) == 0) {
 		retCmd.addVelocity = 1;
 	}
 
-	if (_stepsCounter == (LEVEL_ADD_STEPS-1)) {
+	if ((_stepsCounter % (LEVEL_ADD_STEPS)) == 0 ) {
 		retCmd.addLevel = 1;
-		_stepsCounter = 0;
 	}
 
 	return retCmd;
@@ -38,7 +40,7 @@ cmd_t GameModel::tadpoleCollide()
 	return retCmd;
 }
 
-unsigned GameModel::getPoints()
+unsigned long GameModel::getPoints()
 {
 	return _points;
 }

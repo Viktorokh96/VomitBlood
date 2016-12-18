@@ -23,7 +23,7 @@ Tadpole::Tadpole(Map *map)
 	_vertices.clear();
 	sf::CircleShape c(RADIUS);
 	for(unsigned i = 1; i < c.getPointCount(); ++i)
-		_vertices.append(sf::Vector2f(c.getPoint(i)));
+		_vertices.append(sf::Vector2f(c.getPoint(i) - sf::Vector2f(RADIUS,RADIUS)));
 	sf::Shape::update(); // обращение к методу update предка
 
 	setFillColor(sf::Color::Yellow);
@@ -47,13 +47,13 @@ void Tadpole::update(sf::Time dt)
 	
 	sf::Vector2i velocity
 	(
-		RIGIDITY*(mousePosition.x-tadpolePosition.x-RADIUS),
-		RIGIDITY*(mousePosition.y-tadpolePosition.y-RADIUS)
+		RIGIDITY*(mousePosition.x-tadpolePosition.x),
+		RIGIDITY*(mousePosition.y-tadpolePosition.y)
 	);
 
 	/* Проверка от выхода за пределы верхней и нижней границы карты */
-	if (((tadpolePosition.y < 0) || (tadpolePosition.y > WINDOW_HEIGHT-2*RADIUS))
-	&& ((mousePosition.y < 0) || (mousePosition.y > WINDOW_HEIGHT-2*RADIUS)))
+	if (((tadpolePosition.y < RADIUS) || (tadpolePosition.y > WINDOW_HEIGHT-RADIUS))
+	&& ((mousePosition.y < 0) || (mousePosition.y > WINDOW_HEIGHT-RADIUS)))
 		velocity.y = 0;
 
 	float t = dt.asSeconds();
@@ -64,6 +64,7 @@ bool Tadpole::isCollide()
 {
 	return _map->isCollide(*this);
 }
+
 
 bool Tadpole::isClicked()
 {

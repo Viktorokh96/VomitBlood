@@ -43,7 +43,8 @@ void GameMenuController::setPoints(unsigned p)
 void GameMenuController::processCommands(cmd_t cmd)
 {
 	retCmd = cmd;
-	if(retCmd.exitGame || retCmd.restart || retCmd.resume)
+	if (retCmd.exitGame || retCmd.restart || 
+	retCmd.resume || retCmd.exitGame)
 		stopManage();
 }
 
@@ -96,12 +97,21 @@ void GameController::createNewGame()
 	_view->setFrameTime(timePerFrame);
 }
 
+/*
+ * Обработка событий пришедших с пользователя
+ * в состоянии "Игра". В основном события, 
+ * описанные здесь не влияют на логику работы
+ * игры. Здесь обрабатываются, только внешние
+ * по отношению к игре события, будь это пауза
+ * или закрытие окна
+*/
 void GameController::processEvents()
 {
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		if(event.type == sf::Event::Closed) {
 			window.close();
+			_menu->setGameStatus(windowClosed);
 			stopManage();
 		}	
 
@@ -144,8 +154,16 @@ void GameController::tadpoleMakeStep()
 		clog << "MODEL:map add level!" << endl;
 		_view->addLevel();
 	}
+
+	unsigned points = _model->getPoints();
+	_view->setPoints(points);
 }
 
+/*
+ * Обработка команд, пришедних с представления игры.
+ * Здесь происходит реагирование игры на правила,
+ * установленные моделью
+*/
 void GameController::processCommands(cmd_t cmd)
 {
 	if (cmd.tadpoleCollide)
@@ -154,6 +172,12 @@ void GameController::processCommands(cmd_t cmd)
 		tadpoleMakeStep();
 }
 
+/*
+ * Запуск игры
+ * Реализуется переход в состояние "Игра"
+ * Выход из этого состояния возможен только
+ * по команде пользователя ( нажатие кнопки выход )
+*/
 void GameController::startGame()
 {
 	cmd_t cmd;

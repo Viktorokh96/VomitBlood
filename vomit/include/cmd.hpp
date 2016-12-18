@@ -30,7 +30,7 @@ typedef struct _cmd {
 } cmd_t;
 
 
-enum gameStatus { gamePause , gameOver };
+enum gameStatus { gamePause , gameOver, windowClosed };
 
 
 #endif

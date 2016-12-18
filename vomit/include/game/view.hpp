@@ -85,12 +85,17 @@ public:
 class Map {
 	float _velocity;
 	int _level;
+	unsigned long _points;
 	std::vector<PartOfMap> _parts;
+
+	void drawPoints() const;
 public:
 	Map();
 	~Map();
 
 	void newMap();
+
+	void setPoints(unsigned);
 	
 	void setVelocity(float);
 	float getVelocity();
@@ -125,13 +130,14 @@ public:
 	void draw();
 
 	void setFrameTime(sf::Time dt);
+	void setPoints(unsigned long);
 	void addVelocity();
 	void addLevel();
 };
 
 class GameMenuView : public IView {
 	int _status;
-	unsigned _points;
+	unsigned long _points;
 	void showStatus();
 	void showPoints();
 public:
@@ -141,7 +147,7 @@ public:
 	cmd_t update();
 	void draw();
 
-	void setPoints(unsigned);
+	void setPoints(unsigned long);
 	void setGameStatus(gameStatus);
 };
 

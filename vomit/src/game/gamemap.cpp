@@ -20,9 +20,9 @@ public:
 
 Obstacle::Obstacle()
 {
-	sf::CircleShape c(40);
-	for(unsigned i = 0; i < c.getPointCount(); ++i)
-		_vertices.append(sf::Vector2f(c.getPoint(i)));
+	sf::RectangleShape r(sf::Vector2f(120, 40));
+	for(unsigned i = 0; i < r.getPointCount(); ++i)
+		_vertices.append(sf::Vector2f(r.getPoint(i)));
 	update();
 }
 
@@ -133,10 +133,10 @@ PartOfMap::PartOfMap(float position)
 
 	Obstacle ob1, ob2, ob3, ob4, ob5;
 	ob1.setInMapPosition(0, 0);
-	ob2.setInMapPosition(WINDOW_WIDTH-80, 0);
-	ob3.setInMapPosition(0,PART_HEIGHT-80);
-	ob4.setInMapPosition(WINDOW_WIDTH-80,PART_HEIGHT-80);
-	ob5.setInMapPosition((WINDOW_WIDTH/2)-40,(PART_HEIGHT/2)-40);
+	ob2.setInMapPosition(WINDOW_WIDTH-120, 0);
+	ob3.setInMapPosition(0,PART_HEIGHT-40);
+	ob4.setInMapPosition(WINDOW_WIDTH-120,PART_HEIGHT-40);
+	ob5.setInMapPosition((WINDOW_WIDTH/2)-60,(PART_HEIGHT/2)-40);
 
 	_obstacles.push_back(ob1);
 	_obstacles.push_back(ob2);
@@ -214,11 +214,18 @@ bool PartOfMap::isCollide(const sf::Shape &obj) const
 
 ////////////////////////////////////// Map ///////////////////////////////////////
 
+static sf::Font font;
+
 Map::Map()
 {
 	_parts.clear();
 	_velocity = 0;
 	_level = 0;
+	_points = 0;
+
+	if (!font.loadFromFile("media/FEASFBRG.TTF")) {
+		clog << "ERROR!" << endl;
+	}
 }
 
 Map::~Map()
@@ -245,10 +252,34 @@ void Map::update(sf::Time dt)
 	if(_parts.begin()->getPosition() > WINDOW_HEIGHT) {
 		_parts.push_back(PartOfMap(_parts.rbegin()->getPosition()-PART_HEIGHT));
 		_parts.erase(_parts.begin());
-	} }
+	} 
+}
+
+void Map::drawPoints() const
+{
+	sf::Text points;
+	points.setFont(font);
+	points.setCharacterSize(30);
+	points.setColor(sf::Color::Red);
+	points.setStyle(sf::Text::Bold);
+
+	char score[64];
+	sprintf(score,"Score:%d",_points);
+
+	points.setString(score);
+
+	sf::FloatRect b = points.getLocalBounds();
+
+	points.setPosition(4*(WINDOW_WIDTH/5) - (b.width/2), (b.height));
+
+	window.draw(points);
+
+}
 
 void Map::draw() const
 {
+	drawPoints();
+
 	std::vector<PartOfMap>::const_iterator it = _parts.begin();
 	while(it != _parts.end()) {
 		it->draw();
@@ -274,6 +305,11 @@ void Map::setLevel(int level)
 int Map::getLevel()
 {
 	return _level;
+}
+
+void Map::setPoints(unsigned p)
+{
+	_points = p;
 }
 
 bool Map::isCollide(const sf::Shape &obj) const
