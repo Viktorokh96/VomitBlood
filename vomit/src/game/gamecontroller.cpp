@@ -44,7 +44,7 @@ void GameMenuController::processCommands(cmd_t cmd)
 {
 	retCmd = cmd;
 	if (retCmd.exitGame || retCmd.restart || 
-	retCmd.resume || retCmd.exitGame)
+	retCmd.resume)
 		stopManage();
 }
 
@@ -55,7 +55,7 @@ cmd_t GameMenuController::startMenu()
 	if(!_view)
 		return retCmd;
 
-	manage(*_view);
+	manage(*_view, window);
 
 	return retCmd;
 }
@@ -111,7 +111,6 @@ void GameController::processEvents()
 	while (window.pollEvent(event)) {
 		if(event.type == sf::Event::Closed) {
 			window.close();
-			_menu->setGameStatus(windowClosed);
 			stopManage();
 		}	
 
@@ -184,16 +183,20 @@ void GameController::startGame()
 
 	while (window.isOpen()) {
 
-		manage(*_view);
+		manage(*_view, window);
 
 		cmd = _menu->startMenu();
 
-		if(cmd.resume)
+		if(cmd.resume) {
+			_view->makeTadpoleSleep();
 			continue;
-		if(cmd.restart)
+		}
+		if(cmd.restart) {
 			createNewGame();
-		if(cmd.exitGame)
+		}
+		if(cmd.exitGame) {
 			break;
+		}
 	} 
 }
 

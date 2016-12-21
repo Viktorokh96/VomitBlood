@@ -4,6 +4,8 @@
 #include "iview.hpp"
 #include "cmd.hpp"
 
+#include <SFML/Graphics.hpp>
+
 /*
  * Абстрактный класс контроллера
 */
@@ -14,7 +16,7 @@ protected:
 	virtual ~AController() {}
 	virtual void processCommands(cmd_t cmd) {}
 	virtual void processEvents() {}
-	void manage(IView &);
+	void manage(IView &, sf::RenderWindow &);
 	void stopManage();
 };
 

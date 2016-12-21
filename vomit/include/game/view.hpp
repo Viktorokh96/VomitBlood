@@ -3,6 +3,7 @@
 
 #include "../cmd.hpp"
 #include "../iview.hpp"
+#include "../menu/view.hpp"
 
 #include <SFML/Graphics.hpp>
 using namespace sf;
@@ -121,7 +122,7 @@ class GameView : public IView {
 	sf::Time _dt;
 
 	void newGame();
-	bool _tadpoleClicked;
+	bool _tadpoleSleep;
 public:
 	GameView();
 	~GameView();
@@ -131,6 +132,7 @@ public:
 
 	void setFrameTime(sf::Time dt);
 	void setPoints(unsigned long);
+	void makeTadpoleSleep();
 	void addVelocity();
 	void addLevel();
 };
@@ -140,6 +142,9 @@ class GameMenuView : public IView {
 	unsigned long _points;
 	void showStatus();
 	void showPoints();
+
+	map<char, Button> _buttons;	
+	typedef map<char, Button>::iterator _buttonIter;
 public:
 	GameMenuView();
 	~GameMenuView();

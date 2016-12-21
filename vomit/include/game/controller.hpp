@@ -3,6 +3,7 @@
 
 #include "../cmd.hpp" 
 #include "../acontroller.hpp" 
+#include "../menu/view.hpp" 
 #include "model.hpp" 
 #include "view.hpp" 
 

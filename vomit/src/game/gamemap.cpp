@@ -223,8 +223,8 @@ Map::Map()
 	_level = 0;
 	_points = 0;
 
-	if (!font.loadFromFile("media/FEASFBRG.TTF")) {
-		clog << "ERROR!" << endl;
+	if (!font.loadFromFile("media/menu/FEASFBRG.TTF")) {
+		clog << "ERROR! LOADING FONT IN MAP CONSTRUCTOR!" << endl;
 	}
 }
 
@@ -264,7 +264,7 @@ void Map::drawPoints() const
 	points.setStyle(sf::Text::Bold);
 
 	char score[64];
-	sprintf(score,"Score:%d",_points);
+	sprintf(score,"Score:%ld",_points);
 
 	points.setString(score);
 

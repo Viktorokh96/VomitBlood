@@ -7,7 +7,7 @@ INCLUDE = -I./vomit/include
 LIBS = -lsfml-window -lsfml-graphics -lsfml-system
 
 # Направление поиска исходных файлов для make
-vpath %.cpp ./vomit/src/ ./vomit/src/game/ ./vomit/src/application/
+vpath %.cpp ./vomit/src/ ./vomit/src/game/ ./vomit/src/application/ ./vomit/src/menu/
 # Направление поиска заголовочных файлов для make
 vpath %.hpp ./vomit/include/
 # Установка флагов для компиляции объектных файлов
@@ -29,8 +29,10 @@ VVIEW = gameview.o
 VMAP = gamemap.o
 VTADPOLE = gametadpole.o
 VACONTR = acontroller.o
+VMENUVIEW = menuview.o
+VMENUCONTR = menucontroller.o
 
-ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR)
+ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR) $(VMENUVIEW) $(VMENUCONTR)
 
 EXE := vomitblood
 
@@ -65,6 +67,12 @@ $(VTADPOLE) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VACONTR) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VMENUVIEW) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VMENUCONTR) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 # Очистка директории от объектных файлов

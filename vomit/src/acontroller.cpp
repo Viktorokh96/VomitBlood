@@ -19,7 +19,7 @@
  * 	очень не хорошо.
  * \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
-void AController::manage(IView &view)
+void AController::manage(IView &view, sf::RenderWindow &window)
 {
 	_loopIsRunning = true;
 
@@ -30,7 +30,7 @@ void AController::manage(IView &view)
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
-	while(_loopIsRunning) {
+	while(_loopIsRunning && window.isOpen()) {
 		
 		// Обработка событий, пришедших от пользователя
 		processEvents();

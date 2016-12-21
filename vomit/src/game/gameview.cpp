@@ -6,15 +6,55 @@
 #include <cstdlib>
 using namespace std;
 
+#define BUTT_RAD 35
+
 ////////////////////// GameMenuView //////////////////////
 
 static sf::Font font;
+static sf::Texture restartTexture;
+static sf::Texture resumeTexture;
+static sf::Texture exitTexture;
 
 GameMenuView::GameMenuView()
 {
-	if (!font.loadFromFile("media/FEASFBRG.TTF")) {
-		clog << "ERROR!" << endl;
+	_buttons.clear();
+
+	if (!font.loadFromFile("media/menu/FEASFBRG.TTF")) {
+		clog << "GameMenuVeiw:ERROR LOADING FONT!" << endl;
 	}
+
+	restartTexture.loadFromFile("media/menu/restartbutton.jpeg");
+	resumeTexture.loadFromFile("media/menu/startbutton.jpg");
+	exitTexture.loadFromFile("media/menu/endbutton.jpg");
+
+	restartTexture.setSmooth(true);
+	resumeTexture.setSmooth(true);
+	exitTexture.setSmooth(true);
+
+	Button button(sf::Vector2f((WINDOW_WIDTH/2)-BUTT_RAD, 
+				   10*(WINDOW_HEIGHT/15)), BUTT_RAD);
+
+	button.setTexture(&restartTexture);
+	button.setTextureRect(sf::IntRect(15,15, 164, 168));
+	
+	//restart button
+	_buttons.insert(make_pair('r', button));
+
+	button.setTextureRect(sf::IntRect(18,18, 300, 300));
+	button.setTexture(&resumeTexture);
+
+	button.setPosition(sf::Vector2f((WINDOW_WIDTH/2)+2*BUTT_RAD, 
+				   10*(WINDOW_HEIGHT/15)));
+
+	//resume button (c - continue)
+	_buttons.insert(make_pair('c', button));
+
+	button.setTexture(&exitTexture);
+	button.setPosition(sf::Vector2f((WINDOW_WIDTH/2)-4*BUTT_RAD, 
+				   10*(WINDOW_HEIGHT/15)));
+
+	//exit button (e - exit)
+	_buttons.insert(make_pair('e',button));
 
 	_points = 0;
 }
@@ -24,17 +64,24 @@ cmd_t GameMenuView::update()
 	cmd_t retCmd;
 	retCmd.clear();
 
-	if(_status == windowClosed)
-		retCmd.exitGame = 1;
+	_buttonIter iter = _buttons.begin();
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		retCmd.exitGame = 1;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
-		retCmd.restart = 1;
-
-	if(_status == gamePause) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
-			retCmd.resume = 1;
+	while(iter != _buttons.end()) {
+		if(((iter->second).isClicked())) {
+			switch(iter->first) {
+				case 'r':
+					retCmd.restart = 1;
+					break;
+				case 'c':
+					if(_status == gamePause)
+						retCmd.resume = 1;
+					break;
+				case 'e':
+					retCmd.exitGame = 1;
+					break;
+			}
+		}
+		iter++;
 	}
 
 	return retCmd;
@@ -93,6 +140,16 @@ void GameMenuView::draw()
 	if(_status == gameOver)
 		showPoints();
 
+	_buttonIter iter = _buttons.begin();
+	while(iter != _buttons.end()) {
+		if(iter->first == 'c' && _status == gameOver) {
+			iter++;
+			continue;
+		}
+
+		window.draw(iter->second);
+		iter++;
+	}
 
 	window.display();
 }
@@ -126,7 +183,7 @@ void GameView::newGame()
 	_map->setVelocity(START_MAP_VELOCITY);
 	_map->setLevel(START_MAP_LEVEL);
 	_tadpole->goToStart();
-	_tadpoleClicked = false;
+	_tadpoleSleep = true;
 }
 
 GameView::~GameView()
@@ -160,6 +217,11 @@ void GameView::setPoints(unsigned long p)
 	_map->setPoints(p);
 }
 
+void GameView::makeTadpoleSleep()
+{
+	_tadpoleSleep = true;
+}
+
 /*
  * Метод перерасчёта позиции и столковении
  * значение dt - секунды (float)
@@ -169,7 +231,7 @@ cmd_t GameView::update()
 	cmd_t retCmd;
 	retCmd.clear();
 
-	if (_tadpoleClicked) {
+	if (!_tadpoleSleep) {
 		static int updatesPerStep = UPDATES_PER_STEP;
 
 		updatesPerStep--;
@@ -185,17 +247,15 @@ cmd_t GameView::update()
 		if(_tadpole->isCollide())
 			retCmd.tadpoleCollide = 1;
 	} else {
+	/* Мерцание головастиком, для привлечения внимания игрока */
+		static double a = 0.f;	
+		_tadpole->setScale(abs(cos(a)), abs(cos(a)));
+		a += 0.04f;
+		if(a > 1000) a = 0;
+
 		if(_tadpole->isClicked()) {
 			_tadpole->setScale(1.f,1.f);
-			_tadpoleClicked = true;
-		}
-
-		/* Мерцание головастиком, для привлечения внимания игрока */
-		if(!_tadpoleClicked) {
-			static double a = 0.f;	
-			_tadpole->setScale(abs(cos(a)), abs(cos(a)));
-			a += 0.04f;
-			if(a > 1000) a = 0;
+			_tadpoleSleep = false;
 		}
 	}
 
