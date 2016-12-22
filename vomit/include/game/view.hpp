@@ -64,7 +64,8 @@ class PartOfMap {
 
 	void updateObstacles();
 public:
-	PartOfMap(float position);
+	PartOfMap();
+	PartOfMap(vector<Obstacle *> obstacles);
 	~PartOfMap();
 	void update(float distance);
 

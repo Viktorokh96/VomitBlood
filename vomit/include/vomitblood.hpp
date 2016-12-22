@@ -26,6 +26,8 @@
 #include "menu/view.hpp"
 #include "menu/controller.hpp"
 
+#include "holder/holder.hpp"
+
 // Создаем главное окно приложения
 extern sf::RenderWindow window;
 

@@ -31,8 +31,9 @@ VTADPOLE = gametadpole.o
 VACONTR = acontroller.o
 VMENUVIEW = menuview.o
 VMENUCONTR = menucontroller.o
+VHOLDER = holder.o
 
-ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR) $(VMENUVIEW) $(VMENUCONTR)
+ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR) $(VMENUVIEW) $(VMENUCONTR) $(VHOLDER)
 
 EXE := vomitblood
 
@@ -75,6 +76,9 @@ $(VMENUVIEW) : %.o : %.cpp
 $(VMENUCONTR) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
+$(VHOLDER) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+		
 # Очистка директории от объектных файлов
 .PHONY: clean
 clean :

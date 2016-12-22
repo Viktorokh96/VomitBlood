@@ -126,9 +126,22 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 
 /////////////////////////////////// PartOfMap ////////////////////////////////////
 
-PartOfMap::PartOfMap(float position) 
+PartOfMap::PartOfMap(vector<Obstacle *> obstacles)
 {
-	_position = position;
+	_obstacles.clear();
+
+	vector<Obstacle *>::iterator iter = obstacles.begin();
+	while(iter != obstacles.end()) {
+		_obstacles.push_back(*(*iter));
+		iter++;
+	}
+
+	updateObstacles();
+}
+
+PartOfMap::PartOfMap() 
+{
+	_position = 0.f;
 	_obstacles.clear();
 
 	Obstacle ob1, ob2, ob3, ob4, ob5;
@@ -220,7 +233,7 @@ Map::Map()
 {
 	_parts.clear();
 	_velocity = 0;
-	_level = 0;
+	_level = 1;
 	_points = 0;
 
 	if (!font.loadFromFile("media/menu/FEASFBRG.TTF")) {
@@ -236,8 +249,16 @@ Map::~Map()
 void Map::newMap()
 {
 	_parts.clear();
-	_parts.push_back(PartOfMap(WINDOW_HEIGHT-PART_HEIGHT));
-	_parts.push_back(PartOfMap(WINDOW_HEIGHT-(2*PART_HEIGHT)));
+
+	PartOfMap part; 
+
+	part = resourceHolder.getRandomPartOfMap(_level);
+	part.setPosition(WINDOW_HEIGHT-PART_HEIGHT);
+	_parts.push_back(part);
+
+	part = resourceHolder.getRandomPartOfMap(_level);
+	part.setPosition(WINDOW_HEIGHT-(2*PART_HEIGHT));
+	_parts.push_back(part);
 }
 
 void Map::update(sf::Time dt)
@@ -250,7 +271,9 @@ void Map::update(sf::Time dt)
 	}
 
 	if(_parts.begin()->getPosition() > WINDOW_HEIGHT) {
-		_parts.push_back(PartOfMap(_parts.rbegin()->getPosition()-PART_HEIGHT));
+		PartOfMap part = resourceHolder.getRandomPartOfMap(_level); 
+		part.setPosition(_parts.rbegin()->getPosition()-PART_HEIGHT);
+		_parts.push_back(part);
 		_parts.erase(_parts.begin());
 	} 
 }
