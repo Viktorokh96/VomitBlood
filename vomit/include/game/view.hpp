@@ -143,6 +143,8 @@ class GameMenuView : public IView {
 	unsigned long _points;
 	void showStatus();
 	void showPoints();
+	void showGameOverScreen();
+	void showPauseScreen();
 
 	map<char, Button> _buttons;	
 	typedef map<char, Button>::iterator _buttonIter;

@@ -12,6 +12,7 @@ int Application::init()
 	}
 
 	window.setPosition(sf::Vector2i(0,0));
+	window.setVerticalSyncEnabled(true);
 	
 	return 0;
 }

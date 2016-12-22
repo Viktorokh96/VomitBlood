@@ -14,6 +14,8 @@ static sf::Font font;
 static sf::Texture restartTexture;
 static sf::Texture resumeTexture;
 static sf::Texture exitTexture;
+static sf::Texture gameOverTexture;
+static sf::Texture pauseTexture;
 
 GameMenuView::GameMenuView()
 {
@@ -26,6 +28,8 @@ GameMenuView::GameMenuView()
 	restartTexture.loadFromFile("media/menu/restartbutton.jpeg");
 	resumeTexture.loadFromFile("media/menu/startbutton.jpg");
 	exitTexture.loadFromFile("media/menu/endbutton.jpg");
+	gameOverTexture.loadFromFile("media/game/gameover.jpg");
+	pauseTexture.loadFromFile("media/game/pause.png");
 
 	restartTexture.setSmooth(true);
 	resumeTexture.setSmooth(true);
@@ -91,7 +95,7 @@ void GameMenuView::showStatus()
 {
 	sf::Text status;
 	status.setFont(font);
-	status.setCharacterSize(60);
+	status.setCharacterSize(80);
 	status.setColor(sf::Color::Red);
 	status.setStyle(sf::Text::Bold);
 
@@ -127,6 +131,22 @@ void GameMenuView::showPoints()
 	window.draw(points);
 }
 
+void GameMenuView::showGameOverScreen()
+{
+	sf::Sprite gameOverSprite(gameOverTexture);
+	gameOverSprite.setPosition(0, 47);
+
+	window.draw(gameOverSprite);
+}
+
+void GameMenuView::showPauseScreen()
+{
+	sf::Sprite pauseSprite(pauseTexture);
+	pauseSprite.setColor(sf::Color(255,255,255,5));
+
+	window.draw(pauseSprite);
+}
+
 void GameMenuView::setPoints(unsigned long p)
 {
 	_points = p;
@@ -134,11 +154,15 @@ void GameMenuView::setPoints(unsigned long p)
 
 void GameMenuView::draw()
 {
-	window.clear();
+	if(_status == gameOver) {
+		window.clear();
+		showGameOverScreen();
+		showPoints();
+	} else if (_status == gamePause) {
+		showPauseScreen();
+	}
 
 	showStatus();
-	if(_status == gameOver)
-		showPoints();
 
 	_buttonIter iter = _buttons.begin();
 	while(iter != _buttons.end()) {

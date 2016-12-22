@@ -31,10 +31,13 @@ Button::~Button()
 
 /////////////////////////////// MenuView ///////////////////////////////
 
+static sf::Texture screenTexture;
 static sf::Texture startTexture;
 static sf::Texture endTexture;
 static sf::Font font;
 static sf::Text promt;
+
+static sf::Sprite backScreen;
 
 MenuView::MenuView()
 {
@@ -43,9 +46,15 @@ MenuView::MenuView()
 	startTexture.loadFromFile("media/menu/startbutton.jpg");
 	endTexture.loadFromFile("media/menu/endbutton.jpg");
 	font.loadFromFile("media/menu/FEASFBRG.TTF");
+	screenTexture.loadFromFile("media/menu/screen.jpg");
+
+	backScreen = sf::Sprite(screenTexture);
+	backScreen.setTextureRect(sf::IntRect(0, 0, 800, 644));
+	backScreen.setPosition(0,28);
 
 	startTexture.setSmooth(true);
 	endTexture.setSmooth(true);
+	screenTexture.setSmooth(true);
 
 	promt.setFont(font);
 	promt.setCharacterSize(120);
@@ -102,6 +111,8 @@ cmd_t MenuView::update()
 void MenuView::draw()
 {
 	window.clear();
+
+	window.draw(backScreen);
 
 	_buttonIter iter = _buttons.begin();
 	while(iter != _buttons.end()) {
