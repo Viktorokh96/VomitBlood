@@ -28,6 +28,9 @@
 
 #include "holder/holder.hpp"
 
+#include "loader/loader.hpp"
+#include "loader/loaderException.hpp"
+
 // Создаем главное окно приложения
 extern sf::RenderWindow window;
 
@@ -55,6 +58,7 @@ extern sf::RenderWindow window;
 class Application {
 	MenuController *_menu;
 public:
+	void load();
 	int init();
 	void start();
 	void dispose();

@@ -7,7 +7,7 @@ INCLUDE = -I./vomit/include
 LIBS = -lsfml-window -lsfml-graphics -lsfml-system
 
 # Направление поиска исходных файлов для make
-vpath %.cpp ./vomit/src/ ./vomit/src/game/ ./vomit/src/application/ ./vomit/src/menu/
+vpath %.cpp ./vomit/src/ ./vomit/src/game/ ./vomit/src/application/ ./vomit/src/menu/ ./vomit/src/application/loader/
 # Направление поиска заголовочных файлов для make
 vpath %.hpp ./vomit/include/
 # Установка флагов для компиляции объектных файлов
@@ -32,8 +32,12 @@ VACONTR = acontroller.o
 VMENUVIEW = menuview.o
 VMENUCONTR = menucontroller.o
 VHOLDER = holder.o
+VLOADER = loader.o
+VOBSLOADER = obstacleLoader.o # OBS - Obsacle
+VPOMLOADER = partOfMapLoader.o # POM - Part of map
+VLOADEREXCEPTION = loaderException.o
 
-ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR) $(VMENUVIEW) $(VMENUCONTR) $(VHOLDER)
+ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR) $(VMENUVIEW) $(VMENUCONTR) $(VHOLDER) $(VLOADER) $(VOBSLOADER) $(VPOMLOADER) $(VLOADEREXCEPTION)
 
 EXE := vomitblood
 
@@ -77,6 +81,18 @@ $(VMENUCONTR) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VHOLDER) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VLOADER) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VOBSLOADER) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VPOMLOADER) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VLOADEREXCEPTION) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 		
 # Очистка директории от объектных файлов
