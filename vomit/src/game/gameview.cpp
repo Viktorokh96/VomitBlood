@@ -11,11 +11,11 @@ using namespace std;
 ////////////////////// GameMenuView //////////////////////
 
 static sf::Font font;
-static sf::Texture restartTexture;
-static sf::Texture resumeTexture;
-static sf::Texture exitTexture;
-static sf::Texture gameOverTexture;
-static sf::Texture pauseTexture;
+sf::Texture restartTexture;
+sf::Texture resumeTexture;
+sf::Texture exitTexture;
+sf::Texture gameOverTexture;
+sf::Texture pauseTexture;
 
 GameMenuView::GameMenuView()
 {
@@ -25,11 +25,17 @@ GameMenuView::GameMenuView()
 		clog << "GameMenuVeiw:ERROR LOADING FONT!" << endl;
 	}
 
-	restartTexture.loadFromFile("media/menu/restartbutton.jpeg");
-	resumeTexture.loadFromFile("media/menu/startbutton.jpg");
-	exitTexture.loadFromFile("media/menu/endbutton.jpg");
-	gameOverTexture.loadFromFile("media/game/gameover.jpg");
-	pauseTexture.loadFromFile("media/game/pause.png");
+//	restartTexture = resourceHolder.getTexture("restartButton");
+//	resumeTexture = resourceHolder.getTexture("startButton");
+//	exitTexture = resourceHolder.getTexture("exitButton");
+//	gameOverTexture = resourceHolder.getTexture("gameOver");
+//	pauseTexture = resourceHolder.getTexture("gamePause");
+	
+	restartTexture = resourceHolder.getTexture("restartButton");
+	resumeTexture = resourceHolder.getTexture("startButton");
+	exitTexture = resourceHolder.getTexture("exitButton");
+	gameOverTexture = resourceHolder.getTexture("gameOver");
+	pauseTexture = resourceHolder.getTexture("gamePause");
 
 	restartTexture.setSmooth(true);
 	resumeTexture.setSmooth(true);

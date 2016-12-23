@@ -18,6 +18,16 @@ void Holder::setPartOfMaps(vector<PartOfMap *> partOfMaps)
 	_partOfMaps = partOfMaps;
 }
 
+void Holder::setTextures(map<std::string, Texture*> textures)
+{
+	_textures = textures;
+}
+
+Texture Holder::getTexture(string textureName)
+{
+	return (*_textures[textureName]);
+}
+
 map<std::string, Obstacle *> Holder::getObstacles()
 {
 	return _obstacles;

@@ -36,8 +36,9 @@ VLOADER = loader.o
 VOBSLOADER = obstacleLoader.o # OBS - Obsacle
 VPOMLOADER = partOfMapLoader.o # POM - Part of map
 VLOADEREXCEPTION = loaderException.o
+VTXTLOADER = textureLoader.o # TXT - Texture
 
-ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR) $(VMENUVIEW) $(VMENUCONTR) $(VHOLDER) $(VLOADER) $(VOBSLOADER) $(VPOMLOADER) $(VLOADEREXCEPTION)
+ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR) $(VMENUVIEW) $(VMENUCONTR) $(VHOLDER) $(VLOADER) $(VOBSLOADER) $(VPOMLOADER) $(VLOADEREXCEPTION)  $(VTXTLOADER)
 
 EXE := vomitblood
 
@@ -93,6 +94,9 @@ $(VPOMLOADER) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VLOADEREXCEPTION) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VTXTLOADER) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 		
 # Очистка директории от объектных файлов

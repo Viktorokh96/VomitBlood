@@ -6,40 +6,34 @@ sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "VomitBlood"
 void Application::load()
 {
 	//PartOfMapLoader* _partOfMapLoader;
-	ObstacleLoader* _obstacleLoader;
-	try
-	{
-		_obstacleLoader = new ObstacleLoader(); // Загружаются препятствия
-		//_partOfMapLoader = new PartOfMapLoader(); // Загружаются части карты
-		delete _obstacleLoader;
-		//delete _partOfMapLoader;
-	}	
-	/*ПЕРЕМЕСТИТЬ В init(), КОГДА БУДУТ ПРАВИЛЬНО ЗАГРУЖАТЬСЯ КАРТЫ*/
-	catch (std::bad_alloc &ex) 
-	{
-		cerr << "Bad allocation of Loaders!" << endl;
-		cerr << ex.what() << endl;
-		return;
-	}
-	catch(LoaderException &ex)
-	{
-		cerr << ex.what() << endl;
-		return;
-	}
+	TextureLoader* _textureLoader;
+	//ObstacleLoader* _obstacleLoader;
+
+	_textureLoader = new TextureLoader();
+	//_obstacleLoader = new ObstacleLoader(); // Загружаются препятствия
+	//_partOfMapLoader = new PartOfMapLoader(); // Загружаются части карты
+	delete _textureLoader;
+	//delete _obstacleLoader;
+	//delete _partOfMapLoader;
 	return;
 }
 
 int Application::init()
 {
-	// В дальнейшем вынести обработку исключений из load() сюда!
-	load(); // Загрузка препятствий, карт, тесктур и т.д.
 	try 
 	{
+		load(); // Загрузка препятствий, карт, тесктур и т.д.
 		_menu = new MenuController();
 	} 
 	catch (std::bad_alloc &ex) 
 	{
-		clog << ex.what() << endl;
+		cerr << "Bad allocation of Loaders!" << endl;
+		cerr << ex.what() << endl;
+		return -1;
+	}
+	catch(LoaderException &ex)
+	{
+		cerr << ex.what() << endl;
 		return -1;
 	}
 

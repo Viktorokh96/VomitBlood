@@ -3,17 +3,22 @@
 
 #include "../vomitblood.hpp"
 
+using namespace std;
+
 class Holder {
 	vector<PartOfMap*> _partOfMaps; // Хранимый список карт
-	map<std::string, Obstacle*> _obstacles; // хранимый список препятствий
+	map<string, Obstacle*> _obstacles; // хранимый список препятствий
+	map<string, Texture*> _textures;
 public:
 	Holder();
 	~Holder();
 
-	void setObstacles(map<std::string, Obstacle*> obstacles);
+	void setTextures(map<string, Texture*> textures);
+	void setObstacles(map<string, Obstacle*> obstacles);
 	void setPartOfMaps(vector<PartOfMap *> partOfMaps);
 	
-	map<std::string, Obstacle*> getObstacles();
+	Texture getTexture(string textureName);
+	map<string, Obstacle*> getObstacles();
 	PartOfMap &getRandomPartOfMap(unsigned int level); // вызывается классом Map
 };
 

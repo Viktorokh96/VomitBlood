@@ -23,6 +23,17 @@ public:
 
 /*Классы-обработчики исключений при загрузке*/
 
+/*Обработчик исключений при загрузке текстур*/
+
+class TextureLoaderException : public LoaderException
+{
+public:
+	TextureLoaderException();
+	TextureLoaderException(const TextureLoaderException &obj);
+	~TextureLoaderException() throw();	
+	TextureLoaderException &operator=(TextureLoaderException ex);
+};
+
 /*Обработчик исключений при загрузке препятствий*/
 
 class ObstacleLoaderException : public LoaderException

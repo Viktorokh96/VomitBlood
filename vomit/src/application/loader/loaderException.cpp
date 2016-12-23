@@ -80,7 +80,7 @@ const char* LoaderException::what()
 		return errMsg;	
 	}     		
 		else
-		return _message;
+			return _message;
 }
 
 LoaderException & LoaderException::operator=(LoaderException ex)
@@ -109,8 +109,58 @@ LoaderException & LoaderException::operator=(LoaderException ex)
 
 /*Классы-обработчики исключений при загрузке*/
 
-/*Обработчик исключений при загрузке препятствий*/
+/*Обработчик исключений при загрузке текстур*/
 
+TextureLoaderException::TextureLoaderException()
+{	
+	const int messageLength = strlen("TextureLoader exception: ");
+	_message = new char[messageLength + 1];
+	strncpy(_message, "TextureLoader exception: ", messageLength);
+	_message[messageLength] = '\0';
+}
+
+TextureLoaderException::TextureLoaderException(const TextureLoaderException &obj) : LoaderException(obj) {}
+
+TextureLoaderException::~TextureLoaderException() throw()
+{
+	if ( _errorMessage )
+	{
+		delete [] _errorMessage;	    
+		_errorMessage = NULL;
+	}
+	if (_message)
+	{
+		delete [] _message;
+		_message = NULL;
+	}	
+}
+
+TextureLoaderException & TextureLoaderException::operator=(TextureLoaderException ex)
+{
+	if(this == &ex) return *this;
+	if(ex._errorMessage)
+	{
+		const int ERRSTR_SIZE = strlen( ex._errorMessage );
+		_errorMessage = new char[ ERRSTR_SIZE + 1];
+		
+		strncpy ( _errorMessage, ex._errorMessage, ERRSTR_SIZE);
+		_errorMessage[ ERRSTR_SIZE ] = '\0';	
+	}
+
+	if(ex._message)
+	{
+		const int ERRSTR_SIZE = strlen( ex._message );
+		_message = new char[ ERRSTR_SIZE + 1];
+		
+		strncpy ( _message, ex._message, ERRSTR_SIZE);
+		_message[ ERRSTR_SIZE ] = '\0';	
+	}
+
+	return *this;
+
+}
+
+/*Обработчик исключений при загрузке препятствий*/
 
 ObstacleLoaderException::ObstacleLoaderException()
 {	
@@ -160,6 +210,7 @@ ObstacleLoaderException & ObstacleLoaderException::operator=(ObstacleLoaderExcep
 	return *this;
 
 }
+
 /*Обработчик исключений при загрузке препятствий частей карты */
 
 PartOfMapLoaderException::PartOfMapLoaderException()
