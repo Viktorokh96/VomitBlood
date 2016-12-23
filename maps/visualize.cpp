@@ -12,6 +12,66 @@
 
 using namespace std;
 
+ObstacleLoader *obstLoader;
+Holder resourceHolder;
+
+ObstacleLoader::ObstacleLoader()
+{
+	ex = ObstacleLoaderException();
+	_path = "./obstacles.cfg";
+	try {
+		_tagValueM = getTagValueM();
+	} catch (LoaderException &ex) {
+		cerr << ex.what() << endl;
+	}
+	load();
+}
+
+void ObstacleLoader::load()
+{
+		
+}
+
+ObstacleLoader::~ObstacleLoader()
+{
+}
+
+//////////////////////////Holder//////////////////////////
+Holder::Holder()
+{
+	_partOfMaps.clear();
+	_obstacles.clear();
+}
+
+void Holder::setObstacles(map<std::string, Obstacle*> obstacles)
+{
+	_obstacles = obstacles;
+}
+
+void Holder::setPartOfMaps(vector<PartOfMap *> partOfMaps)
+{
+	_partOfMaps = partOfMaps;
+}
+
+map<std::string, Obstacle *> Holder::getObstacles()
+{
+	return _obstacles;
+}
+
+PartOfMap & Holder::getRandomPartOfMap(unsigned int level)
+{
+	//TEMPORARY!!!!!
+	PartOfMap *part = new PartOfMap();
+
+	return *part;
+}
+
+Holder::~Holder()
+{
+	_partOfMaps.clear();
+	_obstacles.clear();
+}
+
 /////////////////////////////////// Obstacle ////////////////////////////////////
 
 Obstacle::Obstacle()
@@ -254,7 +314,10 @@ vertices_t getObtacleVertices(ifstream &in)
 
 int initMap()
 {
-	vector<Obstacle *> ob;	
+	obstLoader = new ObstacleLoader();
+	
+	delete obstLoader;
+	/*vector<Obstacle *> ob;	
 	ob.clear();
 
 	Obstacle *o;
@@ -282,6 +345,7 @@ int initMap()
 
 	part = new PartOfMap(ob);
 	part->setPosition(WINDOW_HEIGHT - PART_HEIGHT);
+	*/
 
 	return 0;
 }
@@ -332,20 +396,11 @@ sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "VomitBlood"
 
 int main(int argc, char *argv[])
 {
-
-	if (argc < 2)
-	{
-		cout << "Использование:" << argv[0] << " + файл с описанием карты" << endl;
-		return -1;
-	}
-
-	pathToObstacles = argv[1];
-
 	if(initMap() < 0) {
 		cerr << "Ошибка инициализации карты! Сворачиваюсь!" << endl;
 		return -2;
 	}
-
+/*
 	while(window.isOpen())
 	{
 		sf::Event event;
@@ -371,6 +426,6 @@ int main(int argc, char *argv[])
 		part->draw();
 		window.display();	
 	}
-
+*/
 	return 0;
 }

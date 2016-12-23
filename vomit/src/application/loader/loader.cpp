@@ -103,8 +103,10 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 						throw ex;					
 					}
 				}
-				if (value.empty())
-					throw "There's no value!";
+				if (value.empty()) {
+					ex.message("There's no value!");	
+					throw ex;
+				}
 				valueVector.push_back(value); // добавляем значение в конец вектора
 				value.clear();
 				cfgFile >> c;
