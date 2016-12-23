@@ -20,9 +20,18 @@ public:
 
 Obstacle::Obstacle()
 {
-	sf::RectangleShape r(sf::Vector2f(120, 40));
-	for(unsigned i = 0; i < r.getPointCount(); ++i)
-		_vertices.append(sf::Vector2f(r.getPoint(i)));
+	_vertices.clear();
+
+	update();
+}
+
+Obstacle::Obstacle(std::vector<sf::Vector2f> vertices)
+{
+	std::vector<sf::Vector2f>::iterator iter = vertices.begin();
+	while(iter != vertices.end()) {
+		_vertices.append(*iter);
+		iter++;
+	}
 	update();
 }
 

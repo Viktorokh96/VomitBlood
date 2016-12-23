@@ -23,11 +23,12 @@ LDFLAGS = $(LIBS)
 
 MAINOBJ = visualize.o
 VHOLDER = holder.o
+VMAP = gamemap.o
 VLOADER = loader.o
 VPOMLOADER = partOfMapLoader.o # POM - Part of map
 VLOADEREXCEPTION = loaderException.o
 
-ALLOBJ	= $(MAINOBJ) $(VLOADER) $(VPOMLOADER) $(VLOADEREXCEPTION)
+ALLOBJ	= $(MAINOBJ) $(VLOADER) $(VPOMLOADER) $(VLOADEREXCEPTION) $(VHOLDER) $(VMAP)
 
 EXE := visualize
 
@@ -56,6 +57,9 @@ $(VPOMLOADER) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VLOADEREXCEPTION) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VMAP) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 	
 # Очистка директории от объектных файлов

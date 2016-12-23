@@ -6,6 +6,7 @@
 
 #include <vomitblood.hpp>
 #include <fstream>
+#include <set>
 #include <iostream>
 
 #define SEGMENTS_PER_CURVE 25
@@ -13,7 +14,10 @@
 using namespace std;
 
 ObstacleLoader *obstLoader;
-Holder resourceHolder;
+
+typedef map<vector<string>, vector<string> >::iterator tagIter;
+typedef vector<sf::Vector2f> vertices_t;
+enum state { NONE, MOVE_ABS, CURVE_ABS, MOVE_TO, CURVE_TO, LINE_ABS, LINE_TO };
 
 ObstacleLoader::ObstacleLoader()
 {
@@ -27,185 +31,14 @@ ObstacleLoader::ObstacleLoader()
 	load();
 }
 
-void ObstacleLoader::load()
-{
-		
-}
-
-ObstacleLoader::~ObstacleLoader()
-{
-}
-
-//////////////////////////Holder//////////////////////////
-Holder::Holder()
-{
-	_partOfMaps.clear();
-	_obstacles.clear();
-}
-
-void Holder::setObstacles(map<std::string, Obstacle*> obstacles)
-{
-	_obstacles = obstacles;
-}
-
-void Holder::setPartOfMaps(vector<PartOfMap *> partOfMaps)
-{
-	_partOfMaps = partOfMaps;
-}
-
-map<std::string, Obstacle *> Holder::getObstacles()
-{
-	return _obstacles;
-}
-
-PartOfMap & Holder::getRandomPartOfMap(unsigned int level)
-{
-	//TEMPORARY!!!!!
-	PartOfMap *part = new PartOfMap();
-
-	return *part;
-}
-
-Holder::~Holder()
-{
-	_partOfMaps.clear();
-	_obstacles.clear();
-}
-
-/////////////////////////////////// Obstacle ////////////////////////////////////
-
-Obstacle::Obstacle()
-{
-	_vertices.clear();
-}
-
-Obstacle::Obstacle(std::vector<sf::Vector2f> vertices)
-{
-	std::vector<sf::Vector2f>::iterator iter = vertices.begin();
-	while(iter != vertices.end()) {
-		_vertices.append(*iter);
-		iter++;
-	}
-	update();
-}
-
-Obstacle::~Obstacle()
-{
-	_vertices.clear();
-}
-
-void Obstacle::setInMapPosition(sf::Vector2f pos)
-{
-	_inMapPosition = pos;
-}
-
-void Obstacle::setInMapPosition(float x, float y)
-{
-	sf::Vector2f position(x,y);
-	setInMapPosition(position);
-}
-
-sf::Vector2f Obstacle::getInMapPosition()
-{
-	return _inMapPosition;
-}
-
-std::size_t Obstacle::getPointCount() const
-{
-	return _vertices.getVertexCount();
-}
-
-Vector2f Obstacle::getPoint(std::size_t index) const
-{
-	return _vertices[index].position;
-}
-
-/////////////////////////////////// PartOfMap ////////////////////////////////////
-
-PartOfMap::PartOfMap() 
-{
-	_position = 0.f;
-	_obstacles.clear();
-
-	updateObstacles();
-}
-
-PartOfMap::PartOfMap(vector<Obstacle *> obstacles)
-{
-	_obstacles.clear();
-
-	vector<Obstacle *>::iterator iter = obstacles.begin();
-	while(iter != obstacles.end()) {
-		_obstacles.push_back(*(*iter));
-		iter++;
-	}
-
-	updateObstacles();
-}
-
-PartOfMap::~PartOfMap()
-{
-	_obstacles.clear();
-}
-
-void PartOfMap::updateObstacles()
-{
-	std::vector<Obstacle>::iterator it = _obstacles.begin();
-	while(it != _obstacles.end()) {
-
-		it->setPosition
-		(
-			it->getInMapPosition().x,
-			_position + it->getInMapPosition().y
-		);
-
-		it++;
-	}
-}
-
-void PartOfMap::setPosition(float position)
-{
-	_position = position;
-
-	updateObstacles();
-}
-
-float PartOfMap::getPosition()
-{
-	return _position;
-}
-
-void PartOfMap::draw() const
-{
-	std::vector<Obstacle>::const_iterator it = _obstacles.begin();
-	while(it != _obstacles.end()) {
-		window.draw(*it);
-		it++;
-	}
-}
-
-///////////////////////////////////глобальные данные////////////////////////////////////
-
-PartOfMap *part;
-
-sf::View view;
-
-bool _isMovingUp = false;
-bool _isMovingDown = false;
-int delta = 0;
-
-char *pathToObstacles;
-char *pathToPart;
-
-typedef vector<sf::Vector2f> vertices_t;
-enum state { NONE, MOVE_ABS, CURVE_ABS, MOVE_TO, CURVE_TO };
-
 state checkState(char ch, state current)
 {
 	switch(ch)
 	{
 		case 'M': return MOVE_ABS;
 		case 'm': return MOVE_TO;
+		case 'L': return LINE_ABS;
+		case 'l': return LINE_TO;
 		case 'C': return CURVE_ABS;
 		case 'c': return CURVE_TO;
 	}
@@ -229,88 +62,160 @@ sf::Vector2f CalculateBezierPoint(float t, sf::Vector2f p0, sf::Vector2f p1, sf:
 	return p;
 }
 
-vertices_t getObtacleVertices(ifstream &in)
+vertices_t getObtacleVertices(vector<string> coord)
 {
 	vertices_t readed;
 	readed.clear();
 
 	state st = NONE;
 
-	char ch = 0;
+	const char *p;
 	string xS, yS;
 
 	sf::Vector2f lastPos(0,0);
 
-	while(in)
+	vector<string>::iterator iter = coord.begin();
+
+	while(iter != coord.end())
 	{
-		in.get(ch);
-		st = checkState(ch, st);
-
-		xS.clear(); yS.clear();
-
-		switch(st)
+		p = iter->c_str();	
+		for(;*p;p++)
 		{
-			case NONE:
-				break;	
-			case MOVE_ABS:
-				if(isdigit(ch)) 
-				{
-					while(ch != ',') 
-					{
-						xS += ch;	
-						in.get(ch);
-					}
-					in.get(ch);
-					while(!isspace(ch))
-				       	{
-						yS += ch;
-						in.get(ch);
-					}
+			st = checkState(*p, st);
+		}
 
-					lastPos = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));
-					readed.push_back(lastPos);
-				}
+		p = iter->c_str();	
+		if(isdigit(*p) || *p == '-')
+		{
+			
+			xS.clear(); yS.clear();
+
+			switch(st)
+			{
+				case NONE: iter++; break;
+				case MOVE_ABS:
+				case MOVE_TO:
+					for(; *p != ',' && (!iscntrl(*p)); p++)
+						xS += *p;
+					p++;
+					for(; (!isspace(*p)) && (!iscntrl(*p)); p++)
+						yS += *p;
+					if(st == MOVE_ABS)
+						lastPos = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));
+					else
+						lastPos = sf::Vector2f(lastPos.x + atof(xS.c_str()), lastPos.y + atof(yS.c_str()));
+					iter++;
 				break;
-			case CURVE_ABS:			
-				if(isdigit(ch))
-				{
-					sf::Vector2f p[4];
-					p[0] = sf::Vector2f(lastPos);	
 
-					for(int i = 1; i < 4; ++i)
+				case LINE_ABS:
+				case LINE_TO:
+					for(; *p != ',' && (!iscntrl(*p)); p++)
+						xS += *p;
+					p++;
+					for(; (!isspace(*p)) && (!iscntrl(*p)); p++)
+						yS += *p;
+					if(st == LINE_ABS)
+						lastPos = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));
+					else
+						lastPos = sf::Vector2f(lastPos.x + atof(xS.c_str()), lastPos.y + atof(yS.c_str()));
+
+					readed.push_back(lastPos);
+					iter++;
+				break;
+
+				case CURVE_ABS:
+				case CURVE_TO:
+					sf::Vector2f points[4];
+					points[0] = sf::Vector2f(lastPos);	
+
+					for(int i = 1; i < 4; ++i, iter++)
 					{
 						xS.clear(); yS.clear();
-						while(!isdigit(ch)) in.get(ch);
-						while(ch != ',') 
-						{
-							xS += ch;	
-							in.get(ch);
-						}
-						in.get(ch);
-						while(!isspace(ch))
-						{
-							yS += ch;
-							in.get(ch);
-						}
+						p = iter->c_str();
 
-						p[i] = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));	
+						for(; *p != ',' && (!iscntrl(*p)); p++)
+							xS += *p;
+						p++;
+						for(; (!isspace(*p)) && (!iscntrl(*p)); p++)
+							yS += *p;
+
+						if(st == CURVE_ABS) {
+							points[i] = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));	
+						} else {
+							lastPos = sf::Vector2f(lastPos.x + atof(xS.c_str()), lastPos.y + atof(xS.c_str()));
+							points[i] = lastPos;
+						}
 					}
 
-					lastPos = p[3];
-					
+					lastPos = points[3];
+						
 					for(int j = 1; j <= SEGMENTS_PER_CURVE; ++j)
 					{
 						float t = j/ (float) SEGMENTS_PER_CURVE;
-						readed.push_back(CalculateBezierPoint(t, p[0], p[1], p[2], p[3]));
+						readed.push_back(CalculateBezierPoint(t, points[0], points[1], points[2], points[3]));
 					}
-					
-				}
-				break;
+					break;
+			}
+		} else {
+			iter++;
 		}
 	}
-
+				
 	return readed;
 }
+
+
+
+void ObstacleLoader::load()
+{
+	map<string, Obstacle*> obstacles;
+	set<string> obstaclesNames;
+	vector<string> tags;
+
+	tagIter itmap;
+	for(itmap = _tagValueM.begin(); itmap != _tagValueM.end(); itmap++)
+	{
+		tags = itmap->first;
+		obstaclesNames.insert(tags.front());
+	}
+
+	set<string>::const_iterator it = obstaclesNames.begin();
+	while (it != obstaclesNames.end())
+	{
+		Obstacle *tmpObst;
+
+		tags.clear();
+		tags.push_back(*it);
+		tags.push_back("path");
+
+		vertices_t vert = getObtacleVertices(_tagValueM[tags]);
+		tmpObst = new Obstacle(vert);
+
+		tags.pop_back();
+		tags.push_back("texture");
+		// Берём текстуру здесь
+		
+		// Загружаем в obstacles
+		obstacles.insert(make_pair(*it, tmpObst));
+		it++;
+	}
+
+	resourceHolder.setObstacles(obstacles);
+}
+
+ObstacleLoader::~ObstacleLoader()
+{
+}
+
+///////////////////////////////////глобальные данные////////////////////////////////////
+
+PartOfMap *part;
+
+sf::View view;
+
+bool _isMovingUp = false;
+bool _isMovingDown = false;
+int delta = 0;
 
 int initMap()
 {
