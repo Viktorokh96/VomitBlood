@@ -102,7 +102,7 @@ vertices_t getObtacleVertices(vector<string> coord)
 					p++;
 					for(; (!isspace(*p)) && (!iscntrl(*p)); p++)
 						yS += *p;
-					if(st == LINE_ABS)
+					if(st == LINE_ABS || st  == MOVE_ABS)
 						lastPos = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));
 					else
 						lastPos = sf::Vector2f(lastPos.x + atof(xS.c_str()), lastPos.y + atof(yS.c_str()));
