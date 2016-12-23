@@ -53,8 +53,15 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 			}
 		else
 			tagIsOpen = true;
+
 		if(!cfgFile.eof()) // Вынесено для правильного функционирования цикла
 			cfgFile >> c;
+
+		if(cfgFile.eof()) // Вынесено для правильного функционирования цикла
+		{
+			ex.message("Unexpected end of file!");	
+			throw ex;					
+		}
 
 		while(!cfgFile.eof())
 		{
@@ -67,7 +74,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 					cfgFile >> c;
 					if(cfgFile.eof())
 					{
-						ex.message("Unexpected end of file (1)!");	
+						ex.message("Unexpected end of file! Incompleted opening tag!");	
 						throw ex;					
 					}
 				}
@@ -81,13 +88,20 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 				cfgFile >> c; // считываем следующий символ
 				if(cfgFile.eof())
 					{
-						ex.message("Unexpected end of file (2)!");	
+						ex.message("Unexpected end of file (1)! There is no closing tag!");	
 						throw ex;					
 					}
 				if(c != tagOpenBracket)
 					tagIsOpen = false;
 				else
+				{
 					cfgFile >> c;
+					if(cfgFile.eof())
+					{
+						ex.message("Unexpected end of file (2)! There is no closing tag!");	
+						throw ex;					
+					}
+				}
 			}
 			//Читаем список значений
 			while (c != tagOpenBracket)
@@ -99,7 +113,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 					cfgFile.get(c); // Читает с пробелами, в отличие от >>
 					if(cfgFile.eof())
 					{
-						ex.message("Unexpected end of file (3)!");	
+						ex.message("Unexpected end of file! There is no closing tag!");	
 						throw ex;					
 					}
 				}
@@ -112,7 +126,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 				cfgFile >> c;
 				if(cfgFile.eof())
 					{
-						ex.message("Unexpected end of file (4)!");	
+						ex.message("Unexpected end of file! There is no closing tag!");	
 						throw ex;					
 					}
 			}
@@ -121,7 +135,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 			cfgFile >> c;
 			if(c != '/')
 			{
-				ex.message("Can't find '/' near closing tag!");
+				ex.message("Can't find '/' near closing tag! Missed closing tag!");
 				throw ex;				
 			}
 
@@ -134,25 +148,32 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 			{
 				if(tagVector.empty())
 					{
-						ex.message("There is an excess closing tag!");	
+						ex.message("Too much closing tags!");	
 						throw ex;					
 					}
 				//Читаем закрывающий тэг
-				cfgFile >> c;			
+				cfgFile >> c;
+				if(cfgFile.eof())
+						{
+							ex.message("Unexpected end of file! Incompleted closing tag!");	
+							throw ex;					
+						}			
 				while(c != tagCloseBracket)
 				{
 					tag += c; // считываем имя тэга
 					cfgFile >> c;
 					if(cfgFile.eof())
 						{
-							ex.message("Unexpected end of file (5)!");	
+							ex.message("Unexpected end of file! Incompleted closing tag!");	
 							throw ex;					
 						}
 				}
 				//Проверяем закрывающий тэг на корректность
 				if(tag != tagVector.back())
 				{
+
 					ex.message("Wrong name of closing tag!");
+					cerr << tagVector.back();
 					throw ex;				
 				}
 
@@ -180,6 +201,12 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 				}
 			}
 			isMadePair = false;
+		}
+		
+		if (!tagVector.empty())
+		{
+				ex.message("Too little closing tags!");	
+				throw ex;	
 		}
 	}
 
