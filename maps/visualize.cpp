@@ -95,18 +95,6 @@ vertices_t getObtacleVertices(vector<string> coord)
 				case NONE: iter++; break;
 				case MOVE_ABS:
 				case MOVE_TO:
-					for(; *p != ',' && (!iscntrl(*p)); p++)
-						xS += *p;
-					p++;
-					for(; (!isspace(*p)) && (!iscntrl(*p)); p++)
-						yS += *p;
-					if(st == MOVE_ABS)
-						lastPos = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));
-					else
-						lastPos = sf::Vector2f(lastPos.x + atof(xS.c_str()), lastPos.y + atof(yS.c_str()));
-					iter++;
-				break;
-
 				case LINE_ABS:
 				case LINE_TO:
 					for(; *p != ',' && (!iscntrl(*p)); p++)
