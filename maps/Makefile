@@ -26,9 +26,10 @@ VHOLDER = holder.o
 VMAP = gamemap.o
 VLOADER = loader.o
 VPOMLOADER = partOfMapLoader.o # POM - Part of map
+VOBSLOADER = obstacleLoader.o # OBS - Obsacle
 VLOADEREXCEPTION = loaderException.o
 
-ALLOBJ	= $(MAINOBJ) $(VLOADER) $(VPOMLOADER) $(VLOADEREXCEPTION) $(VHOLDER) $(VMAP)
+ALLOBJ	= $(MAINOBJ) $(VLOADER) $(VPOMLOADER) $(VLOADEREXCEPTION) $(VHOLDER) $(VMAP) $(VOBSLOADER)
 
 EXE := visualize
 

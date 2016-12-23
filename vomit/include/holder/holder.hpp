@@ -17,7 +17,7 @@ public:
 	void setObstacles(map<string, Obstacle*> obstacles);
 	void setPartOfMaps(vector<PartOfMap *> partOfMaps);
 	
-	Texture getTexture(string textureName);
+	Texture &getTexture(string textureName);
 	map<string, Obstacle*> getObstacles();
 	PartOfMap &getRandomPartOfMap(unsigned int level); // вызывается классом Map
 };

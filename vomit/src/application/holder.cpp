@@ -23,7 +23,7 @@ void Holder::setTextures(map<std::string, Texture*> textures)
 	_textures = textures;
 }
 
-Texture Holder::getTexture(string textureName)
+Texture &Holder::getTexture(string textureName)
 {
 	return (*_textures[textureName]);
 }
