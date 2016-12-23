@@ -45,6 +45,7 @@ int Application::init()
 
 	window.setPosition(sf::Vector2i(0,0));
 	window.setVerticalSyncEnabled(true);
+	window.setFramerateLimit(60);
 	
 	return 0;
 }

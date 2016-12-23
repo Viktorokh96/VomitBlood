@@ -46,7 +46,7 @@ protected:
 	virtual void load();
 public:
 	ObstacleLoader();
-	~ObstacleLoader();
+	virtual ~ObstacleLoader();
 };
 
 /*Загрузчик частей карты*/
@@ -57,7 +57,7 @@ protected:
 	virtual void load();
 public:
 	PartOfMapLoader();
-	~PartOfMapLoader();
+	virtual ~PartOfMapLoader();
 };
 
 #endif
