@@ -42,6 +42,7 @@ class Obstacle : public sf::Shape {
 	sf::Vector2f _inMapPosition;
 public:
 	Obstacle();
+	Obstacle(std::vector<sf::Vector2f> vertices);
 	~Obstacle();
 
 	void setInMapPosition(sf::Vector2f pos);

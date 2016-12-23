@@ -5,17 +5,27 @@
  */
 
 #include <vomitblood.hpp>
+#include <fstream>
 #include <iostream>
-using namespace std;
 
+#define SEGMENTS_PER_CURVE 25
+
+using namespace std;
 
 /////////////////////////////////// Obstacle ////////////////////////////////////
 
 Obstacle::Obstacle()
 {
-	sf::RectangleShape r(sf::Vector2f(120, 40));
-	for(unsigned i = 0; i < r.getPointCount(); ++i)
-		_vertices.append(sf::Vector2f(r.getPoint(i)));
+	_vertices.clear();
+}
+
+Obstacle::Obstacle(std::vector<sf::Vector2f> vertices)
+{
+	std::vector<sf::Vector2f>::iterator iter = vertices.begin();
+	while(iter != vertices.end()) {
+		_vertices.append(*iter);
+		iter++;
+	}
 	update();
 }
 
@@ -52,23 +62,23 @@ Vector2f Obstacle::getPoint(std::size_t index) const
 
 /////////////////////////////////// PartOfMap ////////////////////////////////////
 
-PartOfMap::PartOfMap(float position) 
+PartOfMap::PartOfMap() 
 {
-	_position = position;
+	_position = 0.f;
 	_obstacles.clear();
 
-	Obstacle ob1, ob2, ob3, ob4, ob5;
-	ob1.setInMapPosition(0, 0);
-	ob2.setInMapPosition(WINDOW_WIDTH-120, 0);
-	ob3.setInMapPosition(0,PART_HEIGHT-40);
-	ob4.setInMapPosition(WINDOW_WIDTH-120,PART_HEIGHT-40);
-	ob5.setInMapPosition((WINDOW_WIDTH/2)-60,(PART_HEIGHT/2)-40);
+	updateObstacles();
+}
 
-	_obstacles.push_back(ob1);
-	_obstacles.push_back(ob2);
-	_obstacles.push_back(ob3);
-	_obstacles.push_back(ob4);
-	_obstacles.push_back(ob5);
+PartOfMap::PartOfMap(vector<Obstacle *> obstacles)
+{
+	_obstacles.clear();
+
+	vector<Obstacle *>::iterator iter = obstacles.begin();
+	while(iter != obstacles.end()) {
+		_obstacles.push_back(*(*iter));
+		iter++;
+	}
 
 	updateObstacles();
 }
@@ -124,11 +134,154 @@ bool _isMovingUp = false;
 bool _isMovingDown = false;
 int delta = 0;
 
+char *pathToObstacles;
 char *pathToPart;
+
+typedef vector<sf::Vector2f> vertices_t;
+enum state { NONE, MOVE_ABS, CURVE_ABS, MOVE_TO, CURVE_TO };
+
+state checkState(char ch, state current)
+{
+	switch(ch)
+	{
+		case 'M': return MOVE_ABS;
+		case 'm': return MOVE_TO;
+		case 'C': return CURVE_ABS;
+		case 'c': return CURVE_TO;
+	}
+
+	return current;
+}
+
+sf::Vector2f CalculateBezierPoint(float t, sf::Vector2f p0, sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f p3)
+{
+	float u = 1 - t;
+	float tt = t*t;
+	float uu = u*u;
+	float uuu = uu * u;
+	float ttt = tt * t;
+
+	sf::Vector2f p = uuu * p0;
+	p += 3 * uu * t * p1;
+	p += 3 * u * tt * p2;
+	p += ttt * p3;
+
+	return p;
+}
+
+vertices_t getObtacleVertices(ifstream &in)
+{
+	vertices_t readed;
+	readed.clear();
+
+	state st = NONE;
+
+	char ch = 0;
+	string xS, yS;
+
+	sf::Vector2f lastPos(0,0);
+
+	while(in)
+	{
+		in.get(ch);
+		st = checkState(ch, st);
+
+		xS.clear(); yS.clear();
+
+		switch(st)
+		{
+			case NONE:
+				break;	
+			case MOVE_ABS:
+				if(isdigit(ch)) 
+				{
+					while(ch != ',') 
+					{
+						xS += ch;	
+						in.get(ch);
+					}
+					in.get(ch);
+					while(!isspace(ch))
+				       	{
+						yS += ch;
+						in.get(ch);
+					}
+
+					lastPos = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));
+					readed.push_back(lastPos);
+				}
+				break;
+			case CURVE_ABS:			
+				if(isdigit(ch))
+				{
+					sf::Vector2f p[4];
+					p[0] = sf::Vector2f(lastPos);	
+
+					for(int i = 1; i < 4; ++i)
+					{
+						xS.clear(); yS.clear();
+						while(!isdigit(ch)) in.get(ch);
+						while(ch != ',') 
+						{
+							xS += ch;	
+							in.get(ch);
+						}
+						in.get(ch);
+						while(!isspace(ch))
+						{
+							yS += ch;
+							in.get(ch);
+						}
+
+						p[i] = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));	
+					}
+
+					lastPos = p[3];
+					
+					for(int j = 1; j <= SEGMENTS_PER_CURVE; ++j)
+					{
+						float t = j/ (float) SEGMENTS_PER_CURVE;
+						readed.push_back(CalculateBezierPoint(t, p[0], p[1], p[2], p[3]));
+					}
+					
+				}
+				break;
+		}
+	}
+
+	return readed;
+}
 
 int initMap()
 {
-	part = new PartOfMap(WINDOW_HEIGHT - PART_HEIGHT);
+	vector<Obstacle *> ob;	
+	ob.clear();
+
+	Obstacle *o;
+	Obstacle *o1;
+	vector<sf::Vector2f> vertices;
+	vertices.clear();
+
+	ifstream obsFile("obstacle.obs");
+	if(!obsFile)
+       	{
+		cout << "Can't open file with obstacles!";
+		return -1;
+	}
+
+	vertices_t obsVertices = getObtacleVertices(obsFile);
+
+	o = new Obstacle(obsVertices);
+	o1 = new Obstacle(obsVertices);
+
+	o->setInMapPosition(0, PART_HEIGHT/2);
+	o1->rotate(180);
+	o1->setInMapPosition(WINDOW_WIDTH, PART_HEIGHT/2);
+	ob.push_back(o);
+	ob.push_back(o1);
+
+	part = new PartOfMap(ob);
+	part->setPosition(WINDOW_HEIGHT - PART_HEIGHT);
 
 	return 0;
 }
@@ -137,7 +290,7 @@ void updatePart()
 {
 	delete part;
 
-	part = new PartOfMap(WINDOW_HEIGHT - PART_HEIGHT);
+	initMap();
 
 	clog << "Part is updated!" << endl;
 }
@@ -186,7 +339,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	pathToPart = argv[1];
+	pathToObstacles = argv[1];
 
 	if(initMap() < 0) {
 		cerr << "Ошибка инициализации карты! Сворачиваюсь!" << endl;
