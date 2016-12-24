@@ -5,16 +5,16 @@ sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "VomitBlood"
 
 void Application::load()
 {
-	//PartOfMapLoader* _partOfMapLoader;
+	PartOfMapLoader* _partOfMapLoader;
 	TextureLoader* _textureLoader;
-	//ObstacleLoader* _obstacleLoader;
+	ObstacleLoader* _obstacleLoader;
 
 	_textureLoader = new TextureLoader();
-	//_obstacleLoader = new ObstacleLoader(); // Загружаются препятствия
-	//_partOfMapLoader = new PartOfMapLoader(); // Загружаются части карты
+	_obstacleLoader = new ObstacleLoader(); // Загружаются препятствия
+	_partOfMapLoader = new PartOfMapLoader(); // Загружаются части карты
 	delete _textureLoader;
-	//delete _obstacleLoader;
-	//delete _partOfMapLoader;
+	delete _obstacleLoader;
+	delete _partOfMapLoader;
 	return;
 }
 

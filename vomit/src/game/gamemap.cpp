@@ -43,6 +43,8 @@ Obstacle::~Obstacle()
 void Obstacle::setInMapPosition(sf::Vector2f pos)
 {
 	_inMapPosition = pos;
+
+	update();
 }
 
 void Obstacle::setInMapPosition(float x, float y)
@@ -248,7 +250,7 @@ void Map::newMap()
 
 	PartOfMap part; 
 
-	part = resourceHolder.getRandomPartOfMap(_level);
+	part = resourceHolder.getStartPartOfMap();
 	part.setPosition(WINDOW_HEIGHT-PART_HEIGHT);
 	_parts.push_back(part);
 

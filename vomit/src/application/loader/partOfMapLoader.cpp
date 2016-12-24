@@ -117,7 +117,10 @@ void PartOfMapLoader::load()
 
 		// Создаём и добавляем новый блок карты в вектор parts
 		PartOfMap *newPart = new PartOfMap(inPartObstacles);	
-		parts.push_back(newPart);
+		if(*it == "start")
+			resourceHolder.setStartPartOfMap(newPart);
+		else
+			parts.push_back(newPart);
 	}
 
 	resourceHolder.setPartOfMaps(parts);

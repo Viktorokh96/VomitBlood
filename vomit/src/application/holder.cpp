@@ -6,6 +6,8 @@ Holder::Holder()
 {
 	_partOfMaps.clear();
 	_obstacles.clear();
+	_textures.clear();
+	_startPartOfMap = NULL;
 }
 
 void Holder::setObstacles(map<std::string, Obstacle*> obstacles)
@@ -38,6 +40,12 @@ void Holder::setTextures(map<std::string, Texture*> textures)
 	_textures = textures;
 }
 
+void Holder::setStartPartOfMap(PartOfMap *part)
+{
+	if(_startPartOfMap) delete _startPartOfMap;
+	_startPartOfMap = part;
+}
+
 Texture &Holder::getTexture(string textureName)
 {
 	return (*_textures[textureName]);
@@ -48,9 +56,15 @@ map<std::string, Obstacle *> Holder::getObstacles()
 	return _obstacles;
 }
 
+
+PartOfMap & Holder::getStartPartOfMap()
+{
+	return *_startPartOfMap;
+}
+
 PartOfMap & Holder::getRandomPartOfMap(unsigned int level)
 {
-	return *_partOfMaps[0];
+	return *_partOfMaps[rand() % _partOfMaps.size()];
 }
 
 Holder::~Holder()

@@ -123,7 +123,7 @@ vertices_t getObtacleVertices(vector<string> coord)
 						if(st == CURVE_ABS) {
 							points[i] = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));	
 						} else {
-							lastPos = sf::Vector2f(lastPos.x + atof(xS.c_str()), lastPos.y + atof(xS.c_str()));
+							lastPos = sf::Vector2f(lastPos.x + atof(xS.c_str()), lastPos.y + atof(yS.c_str()));
 							points[i] = lastPos;
 						}
 					}
