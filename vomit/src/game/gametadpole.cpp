@@ -26,6 +26,8 @@ Tadpole::Tadpole(Map *map)
 		_vertices.append(sf::Vector2f(c.getPoint(i) - sf::Vector2f(RADIUS,RADIUS)));
 	sf::Shape::update(); // обращение к методу update предка
 
+	//tex.loadFromFile();
+	//setTexture("media/game/tadpole.png");
 	setFillColor(sf::Color::Yellow);
 	goToStart();
 }

@@ -127,11 +127,9 @@ void GameController::tadpoleCollide()
 {
 	cmd_t cmd;
 
-	clog << "VIEW:tadpole Collide!" << endl;
 	cmd = _model->tadpoleCollide();
 
 	if (cmd.gameOver) {
-		clog << "MODEL:GAME OVER!" << endl;
 		_menu->setGameStatus(gameOver);
 		_menu->setPoints(_model->getPoints());
 		stopManage();
@@ -142,15 +140,12 @@ void GameController::tadpoleMakeStep()
 {
 	cmd_t cmd;
 
-	clog << "VIEW:tadpole steps!" << endl;
 	cmd = _model->tadpoleMakeStep();
 
 	if (cmd.addVelocity) {
-		clog << "MODEL:map add velocity!" << endl;
 		_view->addVelocity();
 	}
 	if (cmd.addLevel) {
-		clog << "MODEL:map add level!" << endl;
 		_view->addLevel();
 	}
 

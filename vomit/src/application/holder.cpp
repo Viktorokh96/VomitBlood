@@ -28,8 +28,6 @@ void Holder::setTextures(map<std::string, Texture*> textures)
 {
 	map<string, Texture*>::iterator texIter;
 		texIter = _textures.begin();
-	for(;texIter != _textures.end(); texIter++)
-		delete texIter->second;
 
 	_textures = textures;
 }
@@ -73,8 +71,6 @@ Holder::~Holder()
 		texIter = _textures.begin();
 	for(;ObstIt != _obstacles.end(); ObstIt++)
 		delete ObstIt->second;
-	for(;texIter != _textures.end(); texIter++)
-		delete texIter->second;
 
 	_partOfMaps.clear();
 	_obstacles.clear();

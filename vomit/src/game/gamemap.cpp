@@ -32,7 +32,9 @@ Obstacle::Obstacle(std::vector<sf::Vector2f> vertices, string textureName)
 		_vertices.append(*iter);
 		iter++;
 	}
-	_texture = resourceHolder.getTexture(textureName);
+	
+	if((_texture = resourceHolder.getTexture(textureName)))
+		setTexture(_texture);
 	update();
 }
 

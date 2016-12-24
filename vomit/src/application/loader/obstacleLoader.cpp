@@ -174,7 +174,7 @@ void ObstacleLoader::load()
 
 		tags.pop_back();
 		tags.push_back("texture");
-		// Берём текстуру здесь
+		// Берём текстур
 		tmpObst = new Obstacle(vert,_tagValueM[tags][0]);
 		// Загружаем в obstacles
 		obstacles.insert(make_pair(*it, tmpObst));
