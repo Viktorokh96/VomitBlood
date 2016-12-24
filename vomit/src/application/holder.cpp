@@ -46,9 +46,12 @@ void Holder::setStartPartOfMap(PartOfMap *part)
 	_startPartOfMap = part;
 }
 
-Texture &Holder::getTexture(string textureName)
+Texture *Holder::getTexture(string textureName)
 {
-	return (*_textures[textureName]);
+	if (_textures.count(textureName))
+		return _textures[textureName];
+	else
+		return NULL;
 }
 
 map<std::string, Obstacle *> Holder::getObstacles()

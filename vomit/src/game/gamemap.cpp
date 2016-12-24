@@ -25,13 +25,14 @@ Obstacle::Obstacle()
 	update();
 }
 
-Obstacle::Obstacle(std::vector<sf::Vector2f> vertices)
+Obstacle::Obstacle(std::vector<sf::Vector2f> vertices, string textureName)
 {
 	std::vector<sf::Vector2f>::iterator iter = vertices.begin();
 	while(iter != vertices.end()) {
 		_vertices.append(*iter);
 		iter++;
 	}
+	_texture = resourceHolder.getTexture(textureName);
 	update();
 }
 

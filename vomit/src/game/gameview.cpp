@@ -11,11 +11,11 @@ using namespace std;
 ////////////////////// GameMenuView //////////////////////
 
 static sf::Font font;
-sf::Texture restartTexture;
-sf::Texture resumeTexture;
-sf::Texture exitTexture;
-sf::Texture gameOverTexture;
-sf::Texture pauseTexture;
+sf::Texture *restartTexture;
+sf::Texture *resumeTexture;
+sf::Texture *exitTexture;
+sf::Texture *gameOverTexture;
+sf::Texture *pauseTexture;
 
 GameMenuView::GameMenuView()
 {
@@ -37,21 +37,24 @@ GameMenuView::GameMenuView()
 	gameOverTexture = resourceHolder.getTexture("gameOver");
 	pauseTexture = resourceHolder.getTexture("gamePause");
 
-	restartTexture.setSmooth(true);
-	resumeTexture.setSmooth(true);
-	exitTexture.setSmooth(true);
+
+	if(restartTexture)
+		(*restartTexture).setSmooth(true);
+	if(resumeTexture)
+		(*resumeTexture).setSmooth(true);		
+	if(exitTexture)
+		(*exitTexture).setSmooth(true);		
 
 	Button button(sf::Vector2f((WINDOW_WIDTH/2)-BUTT_RAD, 
-				   10*(WINDOW_HEIGHT/15)), BUTT_RAD);
-
-	button.setTexture(&restartTexture);
+		   10*(WINDOW_HEIGHT/15)), BUTT_RAD);
+	button.setTexture(restartTexture);
 	button.setTextureRect(sf::IntRect(15,15, 164, 168));
 	
 	//restart button
 	_buttons.insert(make_pair('r', button));
 
 	button.setTextureRect(sf::IntRect(18,18, 300, 300));
-	button.setTexture(&resumeTexture);
+	button.setTexture(resumeTexture);
 
 	button.setPosition(sf::Vector2f((WINDOW_WIDTH/2)+2*BUTT_RAD, 
 				   10*(WINDOW_HEIGHT/15)));
@@ -59,7 +62,7 @@ GameMenuView::GameMenuView()
 	//resume button (c - continue)
 	_buttons.insert(make_pair('c', button));
 
-	button.setTexture(&exitTexture);
+	button.setTexture(exitTexture);
 	button.setPosition(sf::Vector2f((WINDOW_WIDTH/2)-4*BUTT_RAD, 
 				   10*(WINDOW_HEIGHT/15)));
 
@@ -139,7 +142,7 @@ void GameMenuView::showPoints()
 
 void GameMenuView::showGameOverScreen()
 {
-	sf::Sprite gameOverSprite(gameOverTexture);
+	sf::Sprite gameOverSprite(*gameOverTexture);
 	gameOverSprite.setPosition(0, 47);
 
 	window.draw(gameOverSprite);
@@ -147,7 +150,7 @@ void GameMenuView::showGameOverScreen()
 
 void GameMenuView::showPauseScreen()
 {
-	sf::Sprite pauseSprite(pauseTexture);
+	sf::Sprite pauseSprite(*pauseTexture);
 	pauseSprite.setColor(sf::Color(255,255,255,5));
 
 	window.draw(pauseSprite);

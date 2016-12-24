@@ -16,11 +16,7 @@ ObstacleLoader::ObstacleLoader()
 {
 	ex = ObstacleLoaderException(); // Указываем, что будут вызываться исключения для загрузки препятствий
 	_path = CONFIG_PATH_OBSTACLE; // изменить на _path = Configuration.getObstaclePath(); !!!
-	try {
-		_tagValueM = getTagValueM();
-	} catch (LoaderException &ex) {
-		cerr << ex.what() << endl;
-	}
+	_tagValueM = getTagValueM();
 	load();
 }
 
@@ -174,13 +170,12 @@ void ObstacleLoader::load()
 		tags.push_back("path");
 
 		// Получаем вектор вершин для данного препятствия
-		vertices_t vert = getObtacleVertices(_tagValueM[tags]);
-		tmpObst = new Obstacle(vert);
+		vertices_t vert = getObtacleVertices(_tagValueM[tags]);	
 
 		tags.pop_back();
 		tags.push_back("texture");
 		// Берём текстуру здесь
-		
+		tmpObst = new Obstacle(vert,_tagValueM[tags][0]);
 		// Загружаем в obstacles
 		obstacles.insert(make_pair(*it, tmpObst));
 		it++;

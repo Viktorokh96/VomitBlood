@@ -40,9 +40,10 @@ public:
 class Obstacle : public sf::Shape {
 	VertexArray _vertices;
 	sf::Vector2f _inMapPosition;
+	sf::Texture *_texture;
 public:
 	Obstacle();
-	Obstacle(std::vector<sf::Vector2f> vertices);
+	Obstacle(std::vector<sf::Vector2f> vertices, string textureName);
 	~Obstacle();
 
 	void setInMapPosition(sf::Vector2f pos);
