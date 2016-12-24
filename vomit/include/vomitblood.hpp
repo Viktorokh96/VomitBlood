@@ -13,15 +13,23 @@
 
 #define PART_HEIGHT 		1400
 
-#define START_MAP_VELOCITY 	200
+#define START_MAP_VELOCITY 	400
 #define START_MAP_LEVEL 	1
 #define VELOCITY_INCREMENT 	20
 
-#define REDIGITY 		5
+#define RIGIDITY		10
 
 #include "game/view.hpp"
 #include "game/controller.hpp"
 #include "game/model.hpp"
+
+#include "menu/view.hpp"
+#include "menu/controller.hpp"
+
+#include "holder/holder.hpp"
+
+#include "loader/loader.hpp"
+#include "loader/loaderException.hpp"
 
 // Создаем главное окно приложения
 extern sf::RenderWindow window;
@@ -48,8 +56,9 @@ extern sf::RenderWindow window;
  * 	}
 */
 class Application {
-	GameController *_game;
+	MenuController *_menu;
 public:
+	void load();
 	int init();
 	void start();
 	void dispose();

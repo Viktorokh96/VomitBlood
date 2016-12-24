@@ -1,5 +1,8 @@
 #ifndef _CMD_HPP
 #define _CMD_HPP 1
+
+#include <cstring>
+
 /*
  * Общий интерфейс команд
  * используемый для передачи сообщений
@@ -15,17 +18,11 @@ typedef struct _cmd {
 	unsigned addVelocity:1;
 	unsigned addLevel:1;
 
+	unsigned startGame:1;
 
 	void clear()
 	{
-		tadpoleCollide = 0;
-		tadpoleStep = 0;
-		gameOver = 0;
-		exitGame = 0;
-		addVelocity = 0;
-		addLevel = 0;
-		restart = 0;
-		resume = 0;
+		memset(this, 0, sizeof(_cmd));
 	}
 } cmd_t;
 

@@ -2,31 +2,48 @@
 #define _GAME_VIEW 1
 
 #include "../cmd.hpp"
+#include "../iview.hpp"
+#include "../menu/view.hpp"
 
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
 class Map;
 
+/*
+ * Класс "Головастик"
+ * протагонист этой игры.
+ * Управляется игроком
+*/
 class Tadpole : public sf::Shape {
 	VertexArray _vertices;
 	Map *_map;
 public:
 	Tadpole(Map *map);
 	~Tadpole();
-	void updatePosition(sf::Time dt);
+	void update(sf::Time dt);
 	void goToStart();
 	bool isCollide();
+	bool isClicked();
 	
 	std::size_t getPointCount() const;
     	Vector2f getPoint(std::size_t index) const;
 };
 
+/*
+ * Класс "Препятствие"
+ * антагонист этой игры.
+ * С ним может столкнутся головастик.
+ * Является шаблоном для самых различных
+ * видов препятствии
+*/
 class Obstacle : public sf::Shape {
 	VertexArray _vertices;
 	sf::Vector2f _inMapPosition;
+	sf::Texture *_texture;
 public:
 	Obstacle();
+	Obstacle(std::vector<sf::Vector2f> vertices, string textureName);
 	~Obstacle();
 
 	void setInMapPosition(sf::Vector2f pos);
@@ -49,7 +66,8 @@ class PartOfMap {
 
 	void updateObstacles();
 public:
-	PartOfMap(float position);
+	PartOfMap();
+	PartOfMap(vector<Obstacle> obstacles);
 	~PartOfMap();
 	void update(float distance);
 
@@ -71,12 +89,17 @@ public:
 class Map {
 	float _velocity;
 	int _level;
+	unsigned long _points;
 	std::vector<PartOfMap> _parts;
+
+	void drawPoints() const;
 public:
 	Map();
 	~Map();
 
 	void newMap();
+
+	void setPoints(unsigned);
 	
 	void setVelocity(float);
 	float getVelocity();
@@ -96,27 +119,37 @@ public:
  * В целом вся визуализация и взаимодействие с пользователем
  * происходят в пределах View.
 */
-class GameView {
+class GameView : public IView {
 	Map * _map;	
 	Tadpole *_tadpole;
+	sf::Time _dt;
 
 	void newGame();
+	bool _tadpoleSleep;
 public:
 	GameView();
 	~GameView();
 
-	cmd_t update(sf::Time dt);
+	cmd_t update();
 	void draw();
 
+	void setFrameTime(sf::Time dt);
+	void setPoints(unsigned long);
+	void makeTadpoleSleep();
 	void addVelocity();
 	void addLevel();
 };
 
-class GameMenuView {
+class GameMenuView : public IView {
 	int _status;
-	unsigned _points;
+	unsigned long _points;
 	void showStatus();
 	void showPoints();
+	void showGameOverScreen();
+	void showPauseScreen();
+
+	map<char, Button> _buttons;	
+	typedef map<char, Button>::iterator _buttonIter;
 public:
 	GameMenuView();
 	~GameMenuView();
@@ -124,7 +157,7 @@ public:
 	cmd_t update();
 	void draw();
 
-	void setPoints(unsigned);
+	void setPoints(unsigned long);
 	void setGameStatus(gameStatus);
 };
 

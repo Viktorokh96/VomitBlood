@@ -1,16 +1,33 @@
 #include <vomitblood.hpp>
+#include <iostream>
 
 #define RADIUS 20
 
+#define TADPOLE_START_X (WINDOW_WIDTH/2 - RADIUS)
+#define TADPOLE_START_Y (WINDOW_HEIGHT/2 - RADIUS)
+
+/* 
+ * Конструктор "Головастика" 
+ * должен определять его геометрию.
+ * Это делается посредством описания его вершин
+ * через вектор вершин _vertices, с последующим
+ * обязательным(!!!) вызовом метода предка update
+ * Непосредственно предок sf::Shape после вызова
+ * этого метода будет иметь полную информацию
+ * о геометрии головастиа, таким образом вырисовывая
+ * его на карте.
+*/
 Tadpole::Tadpole(Map *map)
 : _map(map)
 {
 	_vertices.clear();
 	sf::CircleShape c(RADIUS);
 	for(unsigned i = 1; i < c.getPointCount(); ++i)
-		_vertices.append(sf::Vector2f(c.getPoint(i)));
-	update();
+		_vertices.append(sf::Vector2f(c.getPoint(i) - sf::Vector2f(RADIUS,RADIUS)));
+	sf::Shape::update(); // обращение к методу update предка
 
+	//tex.loadFromFile();
+	//setTexture("media/game/tadpole.png");
 	setFillColor(sf::Color::Yellow);
 	goToStart();
 }
@@ -22,16 +39,24 @@ Tadpole::~Tadpole()
 
 void Tadpole::goToStart()
 {
-	setPosition(300, 600);
+	setPosition(TADPOLE_START_X, TADPOLE_START_Y);
 }
 
-void Tadpole::updatePosition(sf::Time dt)
+void Tadpole::update(sf::Time dt)
 {
+	sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+	sf::Vector2f tadpolePosition = getPosition();
+	
 	sf::Vector2i velocity
 	(
-		REDIGITY*(sf::Mouse::getPosition(window).x-getPosition().x-RADIUS),
-		REDIGITY*(sf::Mouse::getPosition(window).y-getPosition().y-RADIUS)
+		RIGIDITY*(mousePosition.x-tadpolePosition.x),
+		RIGIDITY*(mousePosition.y-tadpolePosition.y)
 	);
+
+	/* Проверка от выхода за пределы верхней и нижней границы карты */
+	if (((tadpolePosition.y < RADIUS) || (tadpolePosition.y > WINDOW_HEIGHT-RADIUS))
+	&& ((mousePosition.y < 0) || (mousePosition.y > WINDOW_HEIGHT-RADIUS)))
+		velocity.y = 0;
 
 	float t = dt.asSeconds();
 	move(velocity.x*t,velocity.y*t);
@@ -40,6 +65,15 @@ void Tadpole::updatePosition(sf::Time dt)
 bool Tadpole::isCollide()
 {
 	return _map->isCollide(*this);
+}
+
+
+bool Tadpole::isClicked()
+{
+	sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+	FloatRect bounds = getGlobalBounds();
+	return (bounds.contains(mousePosition.x, mousePosition.y) 
+			&& sf::Mouse::isButtonPressed(sf::Mouse::Left));
 }
 
 std::size_t Tadpole::getPointCount() const

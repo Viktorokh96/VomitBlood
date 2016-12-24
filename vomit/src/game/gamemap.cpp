@@ -20,9 +20,21 @@ public:
 
 Obstacle::Obstacle()
 {
-	sf::CircleShape c(40);
-	for(unsigned i = 0; i < c.getPointCount(); ++i)
-		_vertices.append(sf::Vector2f(c.getPoint(i)));
+	_vertices.clear();
+
+	update();
+}
+
+Obstacle::Obstacle(std::vector<sf::Vector2f> vertices, string textureName)
+{
+	std::vector<sf::Vector2f>::iterator iter = vertices.begin();
+	while(iter != vertices.end()) {
+		_vertices.append(*iter);
+		iter++;
+	}
+	
+	if((_texture = resourceHolder.getTexture(textureName)))
+		setTexture(_texture);
 	update();
 }
 
@@ -34,6 +46,8 @@ Obstacle::~Obstacle()
 void Obstacle::setInMapPosition(sf::Vector2f pos)
 {
 	_inMapPosition = pos;
+
+	update();
 }
 
 void Obstacle::setInMapPosition(float x, float y)
@@ -62,6 +76,21 @@ bool linesIntersects(sf::Vector2f l1[2], sf::Vector2f l2[2])
 	float x1, x2, x3, x4;	
 	float y1, y2, y3, y4;	
 
+	//DEBUG COLLISIONS
+/*
+	VertexArray arr1(sf::Lines, 2);
+	VertexArray arr2(sf::Lines, 2);
+
+	arr1[0].position = sf::Vector2f(l1[0].x, l1[0].y);
+	arr1[1].position = sf::Vector2f(l1[1].x, l1[1].y);
+
+	arr2[0].position = sf::Vector2f(l2[0].x, l2[0].y);
+	arr2[1].position = sf::Vector2f(l2[1].x, l2[1].y);
+
+	window.draw(arr1);
+	window.draw(arr2);
+	window.display();
+*/
 	// Быстрая проверка на пересечение квадратов 
 	// диагоналями которых являются отрезки
 
@@ -106,14 +135,14 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 		for (int i = 0; i < objCount-1; ++i) {
 			sf::Vector2f _objLine[2] =
 			{
-				obj.getPoint(i) + obj.getPosition(),
-				obj.getPoint(i+1) + obj.getPosition()
+				(obj.getPoint(i)) + obj.getPosition(),
+				(obj.getPoint(i+1)) + obj.getPosition()
 			};
-			for(int j = 0; j < obstacleCount; ++j) {
+			for(int j = 0; j < obstacleCount-1; ++j) {
 				sf::Vector2f _obstLine[2] =
 				{
-					getPoint(j) + getPosition(),
-					getPoint(j+1) + getPosition()
+					(getTransform()*getPoint(j)),
+					(getTransform()*getPoint(j+1))
 				};
 				if(linesIntersects(_objLine, _obstLine))
 					return true;
@@ -126,23 +155,23 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 
 /////////////////////////////////// PartOfMap ////////////////////////////////////
 
-PartOfMap::PartOfMap(float position) 
+PartOfMap::PartOfMap(vector<Obstacle> obstacles)
 {
-	_position = position;
 	_obstacles.clear();
 
-	Obstacle ob1, ob2, ob3, ob4, ob5;
-	ob1.setInMapPosition(0, 0);
-	ob2.setInMapPosition(WINDOW_WIDTH-80, 0);
-	ob3.setInMapPosition(0,PART_HEIGHT-80);
-	ob4.setInMapPosition(WINDOW_WIDTH-80,PART_HEIGHT-80);
-	ob5.setInMapPosition((WINDOW_WIDTH/2)-40,(PART_HEIGHT/2)-40);
+	vector<Obstacle>::iterator iter = obstacles.begin();
+	while(iter != obstacles.end()) {
+		_obstacles.push_back(*iter);
+		iter++;
+	}
 
-	_obstacles.push_back(ob1);
-	_obstacles.push_back(ob2);
-	_obstacles.push_back(ob3);
-	_obstacles.push_back(ob4);
-	_obstacles.push_back(ob5);
+	updateObstacles();
+}
+
+PartOfMap::PartOfMap() 
+{
+	_position = 0.f;
+	_obstacles.clear();
 
 	updateObstacles();
 }
@@ -214,11 +243,18 @@ bool PartOfMap::isCollide(const sf::Shape &obj) const
 
 ////////////////////////////////////// Map ///////////////////////////////////////
 
+static sf::Font font;
+
 Map::Map()
 {
 	_parts.clear();
 	_velocity = 0;
-	_level = 0;
+	_level = 1;
+	_points = 0;
+
+	if (!font.loadFromFile("media/menu/FEASFBRG.TTF")) {
+		clog << "ERROR! LOADING FONT IN MAP CONSTRUCTOR!" << endl;
+	}
 }
 
 Map::~Map()
@@ -229,8 +265,16 @@ Map::~Map()
 void Map::newMap()
 {
 	_parts.clear();
-	_parts.push_back(PartOfMap(WINDOW_HEIGHT-PART_HEIGHT));
-	_parts.push_back(PartOfMap(WINDOW_HEIGHT-(2*PART_HEIGHT)));
+
+	PartOfMap part; 
+
+	part = resourceHolder.getStartPartOfMap();
+	part.setPosition(WINDOW_HEIGHT-PART_HEIGHT);
+	_parts.push_back(part);
+
+	part = resourceHolder.getRandomPartOfMap(_level);
+	part.setPosition(WINDOW_HEIGHT-(2*PART_HEIGHT));
+	_parts.push_back(part);
 }
 
 void Map::update(sf::Time dt)
@@ -243,10 +287,32 @@ void Map::update(sf::Time dt)
 	}
 
 	if(_parts.begin()->getPosition() > WINDOW_HEIGHT) {
-		_parts.push_back(PartOfMap(_parts.rbegin()->getPosition()-PART_HEIGHT));
+		PartOfMap part = resourceHolder.getRandomPartOfMap(_level); 
+		part.setPosition(_parts.rbegin()->getPosition()-PART_HEIGHT);
+		_parts.push_back(part);
 		_parts.erase(_parts.begin());
-//DEBUG		std::clog << "NEW PART PASTED!" << std::endl;
-	}
+	} 
+}
+
+void Map::drawPoints() const
+{
+	sf::Text points;
+	points.setFont(font);
+	points.setCharacterSize(30);
+	points.setColor(sf::Color::Red);
+	points.setStyle(sf::Text::Bold);
+
+	char score[64];
+	sprintf(score,"Score:%ld",_points);
+
+	points.setString(score);
+
+	sf::FloatRect b = points.getLocalBounds();
+
+	points.setPosition(4*(WINDOW_WIDTH/5) - (b.width/2), (b.height));
+
+	window.draw(points);
+
 }
 
 void Map::draw() const
@@ -256,6 +322,8 @@ void Map::draw() const
 		it->draw();
 		it++;
 	}
+	
+	drawPoints();
 }
 
 void Map::setVelocity(float vel)
@@ -276,6 +344,11 @@ void Map::setLevel(int level)
 int Map::getLevel()
 {
 	return _level;
+}
+
+void Map::setPoints(unsigned p)
+{
+	_points = p;
 }
 
 bool Map::isCollide(const sf::Shape &obj) const

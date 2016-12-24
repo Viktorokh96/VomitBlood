@@ -4,15 +4,15 @@
 #include "../cmd.hpp"
 
 class GameModel {
-	unsigned int _stepsCounter;
-	unsigned int _points;
+	unsigned long int _stepsCounter;
+	unsigned long int _points;
 public:
 	GameModel();
 	~GameModel();
 
 	cmd_t tadpoleMakeStep();
 	cmd_t tadpoleCollide();
-	unsigned getPoints();
+	unsigned long getPoints();
 	void savePoints();
 };
 
