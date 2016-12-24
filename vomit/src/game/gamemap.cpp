@@ -74,6 +74,21 @@ bool linesIntersects(sf::Vector2f l1[2], sf::Vector2f l2[2])
 	float x1, x2, x3, x4;	
 	float y1, y2, y3, y4;	
 
+	//DEBUG COLLISIONS
+/*
+	VertexArray arr1(sf::Lines, 2);
+	VertexArray arr2(sf::Lines, 2);
+
+	arr1[0].position = sf::Vector2f(l1[0].x, l1[0].y);
+	arr1[1].position = sf::Vector2f(l1[1].x, l1[1].y);
+
+	arr2[0].position = sf::Vector2f(l2[0].x, l2[0].y);
+	arr2[1].position = sf::Vector2f(l2[1].x, l2[1].y);
+
+	window.draw(arr1);
+	window.draw(arr2);
+	window.display();
+*/
 	// Быстрая проверка на пересечение квадратов 
 	// диагоналями которых являются отрезки
 
@@ -118,14 +133,14 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 		for (int i = 0; i < objCount-1; ++i) {
 			sf::Vector2f _objLine[2] =
 			{
-				obj.getPoint(i) + obj.getPosition(),
-				obj.getPoint(i+1) + obj.getPosition()
+				(obj.getPoint(i)) + obj.getPosition(),
+				(obj.getPoint(i+1)) + obj.getPosition()
 			};
 			for(int j = 0; j < obstacleCount-1; ++j) {
 				sf::Vector2f _obstLine[2] =
 				{
-					getPoint(j) + getPosition(),
-					getPoint(j+1) + getPosition()
+					(getTransform()*getPoint(j)),
+					(getTransform()*getPoint(j+1))
 				};
 				if(linesIntersects(_objLine, _obstLine))
 					return true;
@@ -300,13 +315,13 @@ void Map::drawPoints() const
 
 void Map::draw() const
 {
-	drawPoints();
-
 	std::vector<PartOfMap>::const_iterator it = _parts.begin();
 	while(it != _parts.end()) {
 		it->draw();
 		it++;
 	}
+	
+	drawPoints();
 }
 
 void Map::setVelocity(float vel)
