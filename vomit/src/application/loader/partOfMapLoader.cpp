@@ -12,13 +12,13 @@ PartOfMapLoader::PartOfMapLoader()
 	load();
 }
 
-typedef vector<PartOfMap *>::iterator partIter;
+typedef vector<PartOfMap>::iterator partIter;
 typedef map<vector<string>, vector<string> >::iterator tagIter;
 
 void PartOfMapLoader::load()
 {
 	// Будет передан в resourceHolder
-	vector<PartOfMap *> parts;
+	vector<PartOfMap> parts;
 	parts.clear();
 
 	map<string, Obstacle*> obstacles = resourceHolder.getObstacles();
@@ -59,6 +59,7 @@ void PartOfMapLoader::load()
 			}
 		}		
 		
+		inPartObstacles.clear();
 		// После того как определили - уточняем их параметры
 		// ЛЮДЯМ С РАСТРОЙСТВОМ НЕРВНОЙ ПСИХИКИ КАК У МЕНЯ ЛУЧШЕ
 		// ЭТОТ ФРАГМЕНТ НЕ ЧИТАТЬ!!!
@@ -116,7 +117,7 @@ void PartOfMapLoader::load()
 		}
 
 		// Создаём и добавляем новый блок карты в вектор parts
-		PartOfMap *newPart = new PartOfMap(inPartObstacles);	
+		PartOfMap newPart = PartOfMap(inPartObstacles);	
 		if(*it == "start")
 			resourceHolder.setStartPartOfMap(newPart);
 		else

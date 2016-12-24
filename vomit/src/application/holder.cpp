@@ -7,7 +7,6 @@ Holder::Holder()
 	_partOfMaps.clear();
 	_obstacles.clear();
 	_textures.clear();
-	_startPartOfMap = NULL;
 }
 
 void Holder::setObstacles(map<std::string, Obstacle*> obstacles)
@@ -20,13 +19,8 @@ void Holder::setObstacles(map<std::string, Obstacle*> obstacles)
 	_obstacles = obstacles;
 }
 
-void Holder::setPartOfMaps(vector<PartOfMap *> partOfMaps)
+void Holder::setPartOfMaps(vector<PartOfMap> partOfMaps)
 {
-	vector<PartOfMap*>::iterator partIter; // Хранимый список карт
-		partIter = _partOfMaps.begin();
-	for(;partIter != _partOfMaps.end(); partIter++)
-		delete *partIter;
-
 	_partOfMaps = partOfMaps;
 }
 
@@ -40,9 +34,8 @@ void Holder::setTextures(map<std::string, Texture*> textures)
 	_textures = textures;
 }
 
-void Holder::setStartPartOfMap(PartOfMap *part)
+void Holder::setStartPartOfMap(PartOfMap part)
 {
-	if(_startPartOfMap) delete _startPartOfMap;
 	_startPartOfMap = part;
 }
 
@@ -60,14 +53,15 @@ map<std::string, Obstacle *> Holder::getObstacles()
 }
 
 
-PartOfMap & Holder::getStartPartOfMap()
+PartOfMap Holder::getStartPartOfMap()
 {
-	return *_startPartOfMap;
+	return _startPartOfMap;
 }
 
-PartOfMap & Holder::getRandomPartOfMap(unsigned int level)
+PartOfMap Holder::getRandomPartOfMap(unsigned int level)
 {
-	return *_partOfMaps[rand() % _partOfMaps.size()];
+	return _partOfMaps[rand() % _partOfMaps.size()];
+	//return *_partOfMaps[0];
 }
 
 Holder::~Holder()
@@ -77,15 +71,10 @@ Holder::~Holder()
 		ObstIt = _obstacles.begin();
 	map<string, Texture*>::iterator texIter;
 		texIter = _textures.begin();
-	vector<PartOfMap*>::iterator partIter; // Хранимый список карт
-		partIter = _partOfMaps.begin();
-
 	for(;ObstIt != _obstacles.end(); ObstIt++)
 		delete ObstIt->second;
 	for(;texIter != _textures.end(); texIter++)
 		delete texIter->second;
-	for(;partIter != _partOfMaps.end(); partIter++)
-		delete *partIter;
 
 	_partOfMaps.clear();
 	_obstacles.clear();
