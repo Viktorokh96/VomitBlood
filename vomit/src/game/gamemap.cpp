@@ -135,13 +135,13 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 
 /////////////////////////////////// PartOfMap ////////////////////////////////////
 
-PartOfMap::PartOfMap(vector<Obstacle *> obstacles)
+PartOfMap::PartOfMap(vector<Obstacle> obstacles)
 {
 	_obstacles.clear();
 
-	vector<Obstacle *>::iterator iter = obstacles.begin();
+	vector<Obstacle>::iterator iter = obstacles.begin();
 	while(iter != obstacles.end()) {
-		_obstacles.push_back(*(*iter));
+		_obstacles.push_back(*iter);
 		iter++;
 	}
 
@@ -152,19 +152,6 @@ PartOfMap::PartOfMap()
 {
 	_position = 0.f;
 	_obstacles.clear();
-
-	Obstacle ob1, ob2, ob3, ob4, ob5;
-	ob1.setInMapPosition(0, 0);
-	ob2.setInMapPosition(WINDOW_WIDTH-120, 0);
-	ob3.setInMapPosition(0,PART_HEIGHT-40);
-	ob4.setInMapPosition(WINDOW_WIDTH-120,PART_HEIGHT-40);
-	ob5.setInMapPosition((WINDOW_WIDTH/2)-60,(PART_HEIGHT/2)-40);
-
-	_obstacles.push_back(ob1);
-	_obstacles.push_back(ob2);
-	_obstacles.push_back(ob3);
-	_obstacles.push_back(ob4);
-	_obstacles.push_back(ob5);
 
 	updateObstacles();
 }

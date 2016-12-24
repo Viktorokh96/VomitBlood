@@ -13,9 +13,10 @@
 using namespace std;
 
 ObstacleLoader *obstLoader;
+PartOfMapLoader *partsLoader;
 ///////////////////////////////////глобальные данные////////////////////////////////////
 
-PartOfMap *part;
+PartOfMap part;
 
 sf::View view;
 
@@ -26,45 +27,19 @@ int delta = 0;
 int initMap()
 {
 	obstLoader = new ObstacleLoader();
-	
 	delete obstLoader;
-	/*vector<Obstacle *> ob;	
-	ob.clear();
 
-	Obstacle *o;
-	Obstacle *o1;
-	vector<sf::Vector2f> vertices;
-	vertices.clear();
+	partsLoader = new PartOfMapLoader();
+	delete partsLoader;
 
-	ifstream obsFile("obstacle.obs");
-	if(!obsFile)
-       	{
-		cout << "Can't open file with obstacles!";
-		return -1;
-	}
-
-	vertices_t obsVertices = getObtacleVertices(obsFile);
-
-	o = new Obstacle(obsVertices);
-	o1 = new Obstacle(obsVertices);
-
-	o->setInMapPosition(0, PART_HEIGHT/2);
-	o1->rotate(180);
-	o1->setInMapPosition(WINDOW_WIDTH, PART_HEIGHT/2);
-	ob.push_back(o);
-	ob.push_back(o1);
-
-	part = new PartOfMap(ob);
-	part->setPosition(WINDOW_HEIGHT - PART_HEIGHT);
-	*/
+	part = resourceHolder.getRandomPartOfMap(1);
+	part.setPosition(WINDOW_HEIGHT - PART_HEIGHT);
 
 	return 0;
 }
 
 void updatePart()
 {
-	delete part;
-
 	initMap();
 
 	clog << "Part is updated!" << endl;
@@ -76,8 +51,6 @@ void handleInput(sf::Keyboard::Key key, bool isPressed)
 		_isMovingUp = isPressed;
 	else if (key == sf::Keyboard::S)
 		_isMovingDown = isPressed;
-	else if (key == sf::Keyboard::U && (!isPressed))
-		updatePart();
 }
 
 void update()
@@ -105,16 +78,28 @@ void update()
 
 sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "VomitBlood", sf::Style::Titlebar | sf::Style::Close);
 
+// Для очерчивания границ карты
+VertexArray bounds (sf::Lines, 4);
+
 int main(int argc, char *argv[])
 {
 	if(initMap() < 0) {
 		cerr << "Ошибка инициализации карты! Сворачиваюсь!" << endl;
 		return -2;
 	}
-/*
+
+	bounds[0].position = sf::Vector2f(0, WINDOW_HEIGHT-PART_HEIGHT);
+	bounds[1].position = sf::Vector2f(WINDOW_WIDTH+1, WINDOW_HEIGHT-PART_HEIGHT);
+	bounds[2].position = sf::Vector2f(WINDOW_WIDTH+1, WINDOW_HEIGHT);
+	bounds[3].position = sf::Vector2f(0, WINDOW_HEIGHT);
+
+	sf::Clock timer;
+
 	while(window.isOpen())
 	{
 		sf::Event event;
+
+
 		while(window.pollEvent(event))
 		{
 			if(event.type == sf::Event::KeyPressed)
@@ -133,10 +118,16 @@ int main(int argc, char *argv[])
 
 		update();
 
+		if(timer.getElapsedTime().asSeconds() > 1.f) {
+			updatePart();
+			timer.restart();
+		}
+
 		window.clear();
-		part->draw();
+		part.draw();
+		window.draw(bounds);
 		window.display();	
 	}
-*/
+
 	return 0;
 }
