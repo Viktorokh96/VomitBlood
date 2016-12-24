@@ -31,7 +31,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 	char tagOpenBracket = TAG_OPEN_BRACKET; // открывающая скобка
 	char tagCloseBracket = TAG_CLOSE_BRACKET; // закрывающая скобка
 	char c; // для временного хранения символов
-	bool isMadePair; // Пара в ассоциативный массив должна заходить один раз при закрытии тэгов 
+	bool isMadePair = false; // Пара в ассоциативный массив должна заходить один раз при закрытии тэгов 
 					//(точнее сразу же после закрытия первого тэга)
 
 	ifstream cfgFile(_path.c_str());
