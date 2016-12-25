@@ -10,7 +10,6 @@
 
 #include <vomitblood.hpp>
 #include <fstream>
-#include <Windows.h>
   
 using namespace std;
 

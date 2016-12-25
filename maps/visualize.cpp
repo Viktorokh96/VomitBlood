@@ -56,9 +56,15 @@ void handleInput(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::S)
 		_isMovingDown = isPressed;
 	else if (key == sf::Keyboard::D)
-		if (!isPressed) visualizeHolder.choiceNextPartOfMap();
+	{
+		if (!isPressed) 
+			visualizeHolder.choiceNextPartOfMap();
+	}
 	else if (key == sf::Keyboard::A)
-		if (!isPressed) visualizeHolder.choicePastPartOfMap();
+	{
+		if (!isPressed) 
+			visualizeHolder.choicePastPartOfMap();
+	}
 }
 
 void update()

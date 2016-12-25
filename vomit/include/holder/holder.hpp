@@ -30,8 +30,8 @@ public:
 };
 
 class VisualizeHolder {
-	unsigned int _current;
 	Holder &_holder;
+	unsigned int _current;
 public:
 	VisualizeHolder(Holder &h) : _holder(h), _current(0) {}
 	~VisualizeHolder() {}
