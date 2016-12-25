@@ -7,6 +7,7 @@
 #include <vomitblood.hpp>
 #include <set>
 #include <iostream>
+#include <SFML/Window/ContextSettings.hpp>
 
 #define SEGMENTS_PER_CURVE 25
 
@@ -14,6 +15,9 @@ using namespace std;
 
 ObstacleLoader *obstLoader;
 PartOfMapLoader *partsLoader;
+VisualizeHolder visualizeHolder(resourceHolder);
+
+sf::ContextSettings settings;
 ///////////////////////////////////глобальные данные////////////////////////////////////
 
 PartOfMap part;
@@ -32,7 +36,7 @@ int initMap()
 	partsLoader = new PartOfMapLoader();
 	delete partsLoader;
 
-	part = resourceHolder.getRandomPartOfMap(1);
+	part = visualizeHolder.getCurrentPartOfMap();
 	part.setPosition(WINDOW_HEIGHT - PART_HEIGHT);
 
 	return 0;
@@ -51,6 +55,10 @@ void handleInput(sf::Keyboard::Key key, bool isPressed)
 		_isMovingUp = isPressed;
 	else if (key == sf::Keyboard::S)
 		_isMovingDown = isPressed;
+	else if (key == sf::Keyboard::D)
+		if (!isPressed) visualizeHolder.choiceNextPartOfMap();
+	else if (key == sf::Keyboard::A)
+		if (!isPressed) visualizeHolder.choicePastPartOfMap();
 }
 
 void update()
@@ -76,7 +84,7 @@ void update()
 	window.setView(view);
 }
 
-sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "VomitBlood", sf::Style::Titlebar | sf::Style::Close);
+sf::RenderWindow window;
 
 // Для очерчивания границ карты
 VertexArray bounds (sf::Lines, 4);
@@ -87,6 +95,10 @@ int main(int argc, char *argv[])
 		cerr << "Ошибка инициализации карты! Сворачиваюсь!" << endl;
 		return -2;
 	}
+
+	settings.antialiasingLevel = 2;
+	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
+		"VomitBlood", sf::Style::Titlebar | sf::Style::Close, settings);
 
 	bounds[0].position = sf::Vector2f(0, WINDOW_HEIGHT-PART_HEIGHT);
 	bounds[1].position = sf::Vector2f(WINDOW_WIDTH+1, WINDOW_HEIGHT-PART_HEIGHT);

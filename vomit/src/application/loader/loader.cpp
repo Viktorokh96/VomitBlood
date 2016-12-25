@@ -9,6 +9,8 @@
 // Метод load() у каждого загрузчика свой! 
 
 #include <vomitblood.hpp>
+#include <fstream>
+#include <Windows.h>
   
 using namespace std;
 
@@ -33,6 +35,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 	char c; // для временного хранения символов
 	bool isMadePair = false; // Пара в ассоциативный массив должна заходить один раз при закрытии тэгов 
 					//(точнее сразу же после закрытия первого тэга)
+
 
 	ifstream cfgFile(_path.c_str());
 	if(!cfgFile.is_open())
