@@ -4,3 +4,5 @@
 *.vux
 *.lck
 
+/VB
+/fontpath.txt
