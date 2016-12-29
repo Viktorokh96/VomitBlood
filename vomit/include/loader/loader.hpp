@@ -32,9 +32,11 @@ class Loader
 protected:
 	LoaderException ex;
 	string _path; // обязательно у всех наследников
-	map<vector<string>, vector<string> > _tagValueM; // массив тэг-значение, обязательно у всех наследников
 	virtual void load();
+	map<vector<string>, vector<string> > _tagValueM; // массив тэг-значение, обязательно у всех наследников
 	map<vector<string>, vector<string> > getTagValueM();
+	typedef map<vector<string>, vector<string> >::iterator tagValueIter;
+	typedef map<vector<string>, vector<string> >::const_iterator tagValueConstIter;
 public:
 	Loader();
 	~Loader();

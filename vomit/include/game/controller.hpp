@@ -37,7 +37,6 @@ class GameController : public AController {
 	void createNewGame();
 	void tadpoleMakeStep();
 	void tadpoleCollide();
-	void mainGameLoop();
 protected:
 	void processCommands(cmd_t cmd);
 	void processEvents();

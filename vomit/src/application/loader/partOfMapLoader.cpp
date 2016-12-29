@@ -40,20 +40,20 @@ void PartOfMapLoader::load()
 	}
 
 	// После того как определили - уточняем их параметры
-	set<string>::const_iterator it = partNames.begin();
-	for(; it != partNames.end(); it++)
+	set<string>::const_iterator partName = partNames.begin();
+	for(; partName != partNames.end(); partName++)
 	{
 		// Определяем какие вообще есть блоки карт в файле ( их идентификаторы )
 		set<string> obsId;
 		obsId.clear();
 		
 		tags.clear();
-		tags.push_back(*it);
+		tags.push_back(*partName);
 
 		tagIter itmap = _tagValueM.begin();
 		for(; itmap != _tagValueM.end(); itmap++)
 		{
-			if((itmap->first).front() == *it)
+			if((itmap->first).front() == *partName)
 			{
 				obsId.insert(itmap->first[1]);
 			}
@@ -61,64 +61,109 @@ void PartOfMapLoader::load()
 		
 		inPartObstacles.clear();
 		// После того как определили - уточняем их параметры
-		// ЛЮДЯМ С РАСТРОЙСТВОМ НЕРВНОЙ ПСИХИКИ КАК У МЕНЯ ЛУЧШЕ
-		// ЭТОТ ФРАГМЕНТ НЕ ЧИТАТЬ!!!
 		set<string>::const_iterator id = obsId.begin();
 		for(;id != obsId.end(); id++)
 		{
 			tags.clear();
-			tags.push_back(*it);
+			tags.push_back(*partName);
 			tags.push_back(*id);
 
+			// Итератор поиска
+			tagValueConstIter findIter;
+
+			// Заготовка препятствия, которая будет пропущена через конвейер построения
+			Obstacle tmpObstacle;
+
+			// Производим поиск имени препятствия
 			tags.push_back("name");
-			Obstacle tmpObstacle = *obstacles[_tagValueM[tags][0]];
-			
+			findIter = _tagValueM.find(tags);
+			if (findIter != _tagValueM.end())
+			{
+				tmpObstacle = *obstacles[findIter->second[0]];
+			}
+			else
+			{
+				string msg = "Obstacle with id "; msg += *id;
+				msg += " in "; msg += *partName; msg += " has no name!";
+				ex.message(msg.c_str());
+				throw ex;
+			}
+
 			tags.pop_back();
+
+			// Производим поиск позиции препятствия
 			tags.push_back("position");
-			
-			string strPos = _tagValueM[tags][0];
-			string xS, yS;
-			
-			// Знакомьтесь - два наших товарища p и q!
-			// И щепотка строковой магии!
-			const char *q;
-			q = strPos.c_str();
-			for(; *q != ',' && *q != '\0'; q++)
-				xS += *q;
-			q++;
-			for(; *q != '\0'; q++)
-				yS += *q;
+			findIter = _tagValueM.find(tags);
+			if (findIter != _tagValueM.end())
+			{
+				string strPos = findIter->second[0];
+				string xS, yS;
 
-			sf::Vector2f pos(atof(xS.c_str()), atof(yS.c_str()));
-			tmpObstacle.setInMapPosition(pos);
+				const char *q = strPos.c_str();
+				for (; *q != ',' && *q != '\0'; q++)
+					xS += *q;
+				q++;
+				for (; *q != '\0'; q++)
+					yS += *q;
+
+				sf::Vector2f pos(atof(xS.c_str()), atof(yS.c_str()));
+				tmpObstacle.setInMapPosition(pos);
+			}
+			else
+			{
+				string msg = "Obstacle with id "; msg += *id;
+				msg += " in "; msg += *partName; msg += " has no position!";
+				ex.message(msg.c_str());
+				throw ex;
+			}
 
 			tags.pop_back();
+
+			// Производим поиск значения поворота препятствия
+			// Если оно не найдено то по умолчанию - 0 градусов
 			tags.push_back("rotation");
-
-			string strRotate = _tagValueM[tags][0];
-			tmpObstacle.rotate(atof(strRotate.c_str()));
+			findIter = _tagValueM.find(tags);
+			if (findIter != _tagValueM.end())
+			{
+				string strRotate = findIter->second[0];
+				tmpObstacle.rotate(atof(strRotate.c_str()));
+			}
+			else
+			{
+				tmpObstacle.rotate(0);
+			}
 
 			tags.pop_back();
+
+			// Производим поиск значения масштабирования препятствия
+			// Если оно не найдено то по умолчанию - 1,1 по x и y
 			tags.push_back("scale");
+			findIter = _tagValueM.find(tags);
+			if (findIter != _tagValueM.end())
+			{
+				string strScale = findIter->second[0];
+				string xS, yS;
+				xS.clear(); yS.clear();
+				const char *q = strScale.c_str();
+				for (; *q != ',' && *q != '\0'; q++)
+					xS += *q;
+				q++;
+				for (; *q != '\0'; q++)
+					yS += *q;
 
-			string strScale = _tagValueM[tags][0];
-
-			xS.clear(); yS.clear();
-			q = strScale.c_str();
-			for(; *q != ',' && *q != '\0'; q++)
-				xS += *q;
-			q++;
-			for(; *q != '\0'; q++)
-				yS += *q;
-
-			tmpObstacle.setScale(atof(xS.c_str()),atof(yS.c_str()));
+				tmpObstacle.setScale(atof(xS.c_str()), atof(yS.c_str()));
+			}
+			else
+			{
+				tmpObstacle.setScale(1,1);
+			}
 
 			inPartObstacles.push_back(tmpObstacle);
 		}
 
 		// Создаём и добавляем новый блок карты в вектор parts
 		PartOfMap newPart = PartOfMap(inPartObstacles);	
-		if(*it == "start")
+		if(*partName == "start")
 			resourceHolder.setStartPartOfMap(newPart);
 		else
 			parts.push_back(newPart);
