@@ -22,6 +22,7 @@ LDFLAGS = $(LIBS)
 # Пример: MAINOBJ = framework.o
 
 MAINOBJ = main.o
+VCONFIG = configuration.o
 VGAMEOBJ = application.o
 VMODELOBJ = gamemodel.o
 VCONTROBJ = gamecontroller.o
@@ -33,12 +34,13 @@ VMENUVIEW = menuview.o
 VMENUCONTR = menucontroller.o
 VHOLDER = holder.o
 VLOADER = loader.o
+VCONFIGLOADER = configurationLoader.o
 VOBSLOADER = obstacleLoader.o # OBS - Obsacle
 VPOMLOADER = partOfMapLoader.o # POM - Part of map
 VLOADEREXCEPTION = loaderException.o
 VTXTLOADER = textureLoader.o # TXT - Texture
 
-ALLOBJ	= $(MAINOBJ) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR) $(VMENUVIEW) $(VMENUCONTR) $(VHOLDER) $(VLOADER) $(VOBSLOADER) $(VPOMLOADER) $(VLOADEREXCEPTION)  $(VTXTLOADER)
+ALLOBJ	= $(MAINOBJ) $(VCONFIG) $(VGAMEOBJ) $(VMODELOBJ) $(VCONTROBJ) $(VVIEW) $(VMAP) $(VTADPOLE) $(VACONTR) $(VMENUVIEW) $(VMENUCONTR) $(VHOLDER) $(VLOADER) $(VCONFIGLOADER) $(VOBSLOADER) $(VPOMLOADER) $(VLOADEREXCEPTION)  $(VTXTLOADER)
 
 EXE := vomitblood
 
@@ -52,6 +54,9 @@ $(EXE) : $(ALLOBJ)
 #		$(CC) $< $(FLAGS) -o $@
 
 $(MAINOBJ) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VCONFIG) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VGAMEOBJ) : %.o : %.cpp
@@ -85,6 +90,9 @@ $(VHOLDER) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VLOADER) : %.o : %.cpp
+		$(CC) $< $(FLAGS) -o $@
+
+$(VCONFIGLOADER) : %.o : %.cpp
 		$(CC) $< $(FLAGS) -o $@
 
 $(VOBSLOADER) : %.o : %.cpp

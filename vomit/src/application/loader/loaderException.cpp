@@ -109,6 +109,57 @@ LoaderException & LoaderException::operator=(LoaderException ex)
 
 /*Классы-обработчики исключений при загрузке*/
 
+/*Обработчик исключений при загрузке настроек*/
+
+ConfigurationLoaderException::ConfigurationLoaderException()
+{	
+	const int messageLength = strlen("ConfigurationLoader exception: ");
+	_message = new char[messageLength + 1];
+	strncpy(_message, "ConfigurationLoader exception: ", messageLength);
+	_message[messageLength] = '\0';
+}
+
+ConfigurationLoaderException::ConfigurationLoaderException(const ConfigurationLoaderException &obj) : LoaderException(obj) {}
+
+ConfigurationLoaderException::~ConfigurationLoaderException() throw()
+{
+	if ( _errorMessage )
+	{
+		delete [] _errorMessage;	    
+		_errorMessage = NULL;
+	}
+	if (_message)
+	{
+		delete [] _message;
+		_message = NULL;
+	}	
+}
+
+ConfigurationLoaderException & ConfigurationLoaderException::operator=(ConfigurationLoaderException ex)
+{
+	if(this == &ex) return *this;
+	if(ex._errorMessage)
+	{
+		const int ERRSTR_SIZE = strlen( ex._errorMessage );
+		_errorMessage = new char[ ERRSTR_SIZE + 1];
+		
+		strncpy ( _errorMessage, ex._errorMessage, ERRSTR_SIZE);
+		_errorMessage[ ERRSTR_SIZE ] = '\0';	
+	}
+
+	if(ex._message)
+	{
+		const int ERRSTR_SIZE = strlen( ex._message );
+		_message = new char[ ERRSTR_SIZE + 1];
+		
+		strncpy ( _message, ex._message, ERRSTR_SIZE);
+		_message[ ERRSTR_SIZE ] = '\0';	
+	}
+
+	return *this;
+
+}
+
 /*Обработчик исключений при загрузке текстур*/
 
 TextureLoaderException::TextureLoaderException()

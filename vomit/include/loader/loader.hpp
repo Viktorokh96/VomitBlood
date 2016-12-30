@@ -42,6 +42,17 @@ public:
 	~Loader();
 };
 
+/*Загрузчик настроек*/
+
+class ConfigurationLoader : public Loader
+{
+protected:
+	virtual void load();
+public:
+	ConfigurationLoader();
+	virtual ~ConfigurationLoader();
+};
+
 /*Загрузчик текстур*/
 
 class TextureLoader : public Loader

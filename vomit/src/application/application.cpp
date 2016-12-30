@@ -5,6 +5,7 @@ sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "VomitBlood"
 
 void Application::load()
 {
+	ConfigurationLoader _configLoader;	// Загрузка настроек
 	TextureLoader _textureLoader;		// Загрузка текстур
 	ObstacleLoader _obstacleLoader;		// Загрузка препятствий
 	PartOfMapLoader _partOfMapLoader;	// Загрузка частей карты
@@ -43,5 +44,6 @@ void Application::start()
 
 void Application::dispose()
 {
+	config.save();
 	delete _menu;
 }

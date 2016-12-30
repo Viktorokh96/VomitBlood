@@ -23,6 +23,17 @@ public:
 
 /*Классы-обработчики исключений при загрузке*/
 
+/*Обработчик исключений при загрузке настроек*/
+
+class ConfigurationLoaderException : public LoaderException
+{
+public:
+	ConfigurationLoaderException();
+	ConfigurationLoaderException(const ConfigurationLoaderException &obj);
+	~ConfigurationLoaderException() throw();	
+	ConfigurationLoaderException &operator=(ConfigurationLoaderException ex);
+};
+
 /*Обработчик исключений при загрузке текстур*/
 
 class TextureLoaderException : public LoaderException

@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#define CONFIGURATION_PATH "./config/config.cfg"
+
 #define UPDATES_PER_STEP 	60
 
 #define VELOCITY_ADD_STEPS 	5
@@ -18,6 +20,8 @@
 #define VELOCITY_INCREMENT 	15
 
 #define RIGIDITY		10
+
+#include "configuration.hpp"
 
 #include "game/view.hpp"
 #include "game/controller.hpp"

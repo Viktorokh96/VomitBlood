@@ -301,24 +301,31 @@ void Map::update(sf::Time dt)
 	} 
 }
 
-void Map::drawPoints() const
+void Map::drawInfo() const
 {
-	sf::Text points;
+	sf::Text points, level;
 	points.setFont(font);
+	level.setFont(font);
 	points.setCharacterSize(30);
+	level.setCharacterSize(30);
 	points.setColor(sf::Color::Red);
+	level.setColor(sf::Color::Green);
 	points.setStyle(sf::Text::Bold);
+	level.setStyle(sf::Text::Bold);
 
-	char score[64];
+	char score[64], levelString[32];
 	sprintf(score,"Score:%ld",_points);
-
+	sprintf(levelString, "Level:%d", _level);
 	points.setString(score);
+	level.setString(levelString);
 
 	sf::FloatRect b = points.getLocalBounds();
 
 	points.setPosition(4*(WINDOW_WIDTH/5) - (b.width/2), (b.height));
+	level.setPosition(1*(WINDOW_WIDTH/5) - (b.width/2), (b.height));
 
 	window.draw(points);
+	window.draw(level);
 
 }
 
@@ -330,7 +337,7 @@ void Map::draw() const
 		it++;
 	}
 	
-	drawPoints();
+	drawInfo();
 }
 
 void Map::setVelocity(float vel)

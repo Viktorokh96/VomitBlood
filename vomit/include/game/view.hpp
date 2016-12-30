@@ -101,7 +101,7 @@ class Map {
 	unsigned long _points;
 	std::vector<PartOfMap> _parts;
 
-	void drawPoints() const;
+	void drawInfo() const;
 public:
 	Map();
 	~Map();
