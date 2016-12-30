@@ -75,6 +75,8 @@ Holder::~Holder()
 		ObstIt = _obstacles.begin();
 	map<string, Texture*>::iterator texIter;
 		texIter = _textures.begin();
+	for(;texIter != _textures.end(); texIter++)
+		delete texIter->second;
 	for(;ObstIt != _obstacles.end(); ObstIt++)
 		delete ObstIt->second;
 
