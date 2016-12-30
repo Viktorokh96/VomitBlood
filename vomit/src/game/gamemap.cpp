@@ -155,7 +155,8 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 
 /////////////////////////////////// PartOfMap ////////////////////////////////////
 
-PartOfMap::PartOfMap(vector<Obstacle> obstacles)
+PartOfMap::PartOfMap(vector<Obstacle> obstacles, const unsigned level)
+: _level(level)
 {
 	_obstacles.clear();
 
@@ -169,6 +170,7 @@ PartOfMap::PartOfMap(vector<Obstacle> obstacles)
 }
 
 PartOfMap::PartOfMap() 
+: _level(1)
 {
 	_position = 0.f;
 	_obstacles.clear();
@@ -201,6 +203,11 @@ void PartOfMap::setPosition(float position)
 	_position = position;
 
 	updateObstacles();
+}
+
+unsigned PartOfMap::getLevel() const
+{
+	return _level;
 }
 
 float PartOfMap::getPosition()

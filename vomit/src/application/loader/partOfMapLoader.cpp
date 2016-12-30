@@ -13,7 +13,6 @@ PartOfMapLoader::PartOfMapLoader()
 }
 
 typedef vector<PartOfMap>::iterator partIter;
-typedef map<vector<string>, vector<string> >::iterator tagIter;
 
 void PartOfMapLoader::load()
 {
@@ -21,8 +20,10 @@ void PartOfMapLoader::load()
 	vector<PartOfMap> parts;
 	parts.clear();
 
+	// Получаем список всех имеющихся препятстви
 	map<string, Obstacle*> obstacles = resourceHolder.getObstacles();
 
+	// Подготавливаем ключ для поиска значений отображения _tagValueM
 	vector<string> tags;
 	tags.clear();
 
@@ -31,35 +32,59 @@ void PartOfMapLoader::load()
 	inPartObstacles.clear();
 
 	set<string> partNames;
-	// Определяем какие вообще есть блоки карт в файле ( их идентификаторы )
-	tagIter itmap = _tagValueM.begin();
+	// Определяем какие вообще есть блоки карт в файле
+	tagValueIter itmap = _tagValueM.begin();
 	for(; itmap != _tagValueM.end(); itmap++)
 	{
 		tags = itmap->first;
 		partNames.insert(tags.front());
 	}
 
+	// Уровень сложности части карты
+	unsigned partLevel;
+
+	// Итератор поиска
+	tagValueConstIter findIter;
+
 	// После того как определили - уточняем их параметры
 	set<string>::const_iterator partName = partNames.begin();
 	for(; partName != partNames.end(); partName++)
 	{
-		// Определяем какие вообще есть блоки карт в файле ( их идентификаторы )
 		set<string> obsId;
 		obsId.clear();
 		
 		tags.clear();
 		tags.push_back(*partName);
 
-		tagIter itmap = _tagValueM.begin();
+		// Определяем уровень сложности блока карты ( если описан )
+		// По умолчанию - 1
+		tags.push_back("level");
+		findIter = _tagValueM.find(tags);
+		if (findIter != _tagValueM.end())
+		{
+			partLevel = atoi(findIter->second[0].c_str());
+		}
+		else
+		{	
+			partLevel = 1; 		// Значение уровня по умолчанию
+		}
+
+		tags.pop_back();
+
+
+		// Определяем какие вообще препятствия в в блоке ( их идентификаторы )
+		tagValueIter itmap = _tagValueM.begin();
 		for(; itmap != _tagValueM.end(); itmap++)
 		{
-			if((itmap->first).front() == *partName)
+			if(((itmap->first).front() == *partName) 
+					&& itmap->first[1] != "level")
 			{
 				obsId.insert(itmap->first[1]);
 			}
 		}		
 		
 		inPartObstacles.clear();
+
 		// После того как определили - уточняем их параметры
 		set<string>::const_iterator id = obsId.begin();
 		for(;id != obsId.end(); id++)
@@ -68,8 +93,6 @@ void PartOfMapLoader::load()
 			tags.push_back(*partName);
 			tags.push_back(*id);
 
-			// Итератор поиска
-			tagValueConstIter findIter;
 
 			// Заготовка препятствия, которая будет пропущена через конвейер построения
 			Obstacle tmpObstacle;
@@ -162,7 +185,8 @@ void PartOfMapLoader::load()
 		}
 
 		// Создаём и добавляем новый блок карты в вектор parts
-		PartOfMap newPart = PartOfMap(inPartObstacles);	
+		PartOfMap newPart = PartOfMap(inPartObstacles, partLevel);	
+
 		if(*partName == "start")
 			resourceHolder.setStartPartOfMap(newPart);
 		else

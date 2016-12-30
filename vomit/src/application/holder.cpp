@@ -58,7 +58,14 @@ PartOfMap Holder::getStartPartOfMap()
 
 PartOfMap Holder::getRandomPartOfMap(unsigned int level)
 {
-	return _partOfMaps[rand() % _partOfMaps.size()];
+	unsigned randomPart;
+
+	do
+	{
+		randomPart = rand() % _partOfMaps.size();
+	} while(_partOfMaps[randomPart].getLevel() > level);
+
+	return _partOfMaps[randomPart];
 }
 
 Holder::~Holder()

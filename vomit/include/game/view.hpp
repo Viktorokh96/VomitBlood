@@ -57,22 +57,31 @@ public:
 };
 
 /*
+ * Класс "Часть карты" или "Блок"
+ * Служит строительным кирпичом всей карты.
+ * Карта должна генерироваться из случайного набора блоков,
+ * которые будут описаны в отдельном месте и построены 
+ * загрузчиками.
+ * Замечания:
  * distance <- расстояние на которое нужно передвинутся вниз
- * TODO:Толстые стенки в начале и в конце блока
 */
 class PartOfMap {
-	std::vector<Obstacle> _obstacles;
-	float _position;
+	unsigned _level; 			// Уровень сложности блока
+	float _position;			// Позиция блока на карте
+	std::vector<Obstacle> _obstacles;	// Препятствия блока
 
 	void updateObstacles();
 public:
 	PartOfMap();
-	PartOfMap(vector<Obstacle> obstacles);
+	PartOfMap(vector<Obstacle> obstacles, const unsigned level);
 	~PartOfMap();
 	void update(float distance);
 
+	unsigned getLevel() const;
+
+	// Установка позиции блока относительно верхней границы окна
 	void setPosition(float position);
-	float getPosition();
+	float getPosition();	
 
 	void draw() const;
 
