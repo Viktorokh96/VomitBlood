@@ -7,7 +7,6 @@ MenuController::MenuController()
 {
 	try {
 		_view = new MenuView();
-		_game = new GameController();
 	} catch (bad_alloc bad) {
 		return;
 	}

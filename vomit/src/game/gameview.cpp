@@ -25,12 +25,6 @@ GameMenuView::GameMenuView()
 		clog << "GameMenuVeiw:ERROR LOADING FONT!" << endl;
 	}
 
-//	restartTexture = resourceHolder.getTexture("restartButton");
-//	resumeTexture = resourceHolder.getTexture("startButton");
-//	exitTexture = resourceHolder.getTexture("exitButton");
-//	gameOverTexture = resourceHolder.getTexture("gameOver");
-//	pauseTexture = resourceHolder.getTexture("gamePause");
-	
 	restartTexture = resourceHolder.getTexture("restartButton");
 	resumeTexture = resourceHolder.getTexture("startButton");
 	exitTexture = resourceHolder.getTexture("exitButton");
