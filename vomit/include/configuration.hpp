@@ -40,7 +40,4 @@ public:
 	string& getTexturePath();
 };
 
-// Глобальный объект Configuration
-extern Configuration config;
-
 #endif

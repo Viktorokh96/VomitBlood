@@ -49,7 +49,4 @@ public:
 	}
 };
 
-// Глобальный объект Holder
-extern Holder resourceHolder;
-
 #endif

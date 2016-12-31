@@ -46,11 +46,11 @@ void Tadpole::update(sf::Time dt)
 {
 	sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 	sf::Vector2f tadpolePosition = getPosition();
-	
+	int rigidity = config.getRigidity();
 	sf::Vector2i velocity
 	(
-		RIGIDITY*(mousePosition.x-tadpolePosition.x),
-		RIGIDITY*(mousePosition.y-tadpolePosition.y)
+		rigidity*(mousePosition.x-tadpolePosition.x),
+		rigidity*(mousePosition.y-tadpolePosition.y)
 	);
 
 	/* Проверка от выхода за пределы верхней и нижней границы карты */

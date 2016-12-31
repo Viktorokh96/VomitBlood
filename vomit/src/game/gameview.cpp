@@ -207,8 +207,8 @@ GameView::GameView()
 void GameView::newGame()
 {
 	_map->newMap();
-	_map->setVelocity(START_MAP_VELOCITY);
-	_map->setLevel(START_MAP_LEVEL);
+	_map->setVelocity(config.getStartVelocity());
+	_map->setLevel(config.getStartLevel());
 	_tadpole->goToStart();
 	_tadpoleSleep = true;
 }

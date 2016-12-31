@@ -15,11 +15,9 @@
 
 #define PART_HEIGHT 		1400
 
-#define START_MAP_VELOCITY 	400
-#define START_MAP_LEVEL 	1
-#define VELOCITY_INCREMENT 	15
+//#define START_MAP_VELOCITY 	400
 
-#define RIGIDITY		10
+#define VELOCITY_INCREMENT 	15
 
 #include "configuration.hpp"
 
@@ -37,6 +35,11 @@
 
 // Создаем главное окно приложения
 extern sf::RenderWindow window;
+// Глобальный объект Configuration
+extern Configuration config;
+// Глобальный объект Holder
+extern Holder resourceHolder;
+
 
 /*
  * Application - главный класс игры

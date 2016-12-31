@@ -7,7 +7,7 @@ using namespace std;
 TextureLoader::TextureLoader()
 {
 	ex = TextureLoaderException(); // Указываем, что будут вызываться исключения для загрузки препятствий
-	_path = CONFIG_PATH_TEXTURE; // изменить на _path = Configuration.getObstaclePath(); !!!
+	_path = config.getTexturePath(); // изменить на _path = Configuration.getObstaclePath(); !!!
 	_tagValueM = getTagValueM();
 	load();
 }

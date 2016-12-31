@@ -15,7 +15,7 @@ enum state { NONE, MOVE_ABS, CURVE_ABS, MOVE_TO, CURVE_TO, LINE_ABS, LINE_TO };
 ObstacleLoader::ObstacleLoader()
 {
 	ex = ObstacleLoaderException(); // Указываем, что будут вызываться исключения для загрузки препятствий
-	_path = CONFIG_PATH_OBSTACLE; // изменить на _path = Configuration.getObstaclePath(); !!!
+	_path = config.getObstaclePath(); 
 	_tagValueM = getTagValueM();
 	load();
 }
