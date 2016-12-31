@@ -14,6 +14,7 @@ private:
 	string _obstaclePath;
 	string _partOfMapPath;
 	string _texturePath;
+	map<string, string> getParameters();
 
 public:
 	Configuration();

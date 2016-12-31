@@ -19,14 +19,6 @@
 #include <map>
 #include <vector>
 
-#define CONFIG_PATH_OBSTACLE "./config/obstacle.cfg" 
-#define CONFIG_PATH_POM "./config/partOfMap.cfg"
-#define CONFIG_PATH_TEXTURE "./config/texture.cfg"
-
-// в дальнейшем пути к конфигам можно будет брать у класса Configuration 
-#define TAG_OPEN_BRACKET '['
-#define TAG_CLOSE_BRACKET ']'
-
 class Loader
 {
 protected:

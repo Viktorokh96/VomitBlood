@@ -11,6 +11,10 @@
 #ifndef _TAGS
 #define _TAGS 1
 
+//Открывающий и закрывающий тэги
+#define TAG_OPEN_BRACKET '['
+#define TAG_CLOSE_BRACKET ']'
+
 // Начальная скорость
 #define TAG_START_VELOCITY "startVelocity" 	
 #define DEFAULT_START_VELOCITY 400

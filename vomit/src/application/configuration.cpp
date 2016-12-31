@@ -1,5 +1,7 @@
 #include <vomitblood.hpp>
 #include <tags.hpp>
+#include <fstream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -19,8 +21,52 @@ Configuration::Configuration()
 	_texturePath = DEFAULT_TEXTURE_PATH;
 }
 
+map<string, string> Configuration::getParameters()
+{
+	map<string, string> params;
+	char valueArray[10];
+	string startVelocity;
+	string startLevel;
+	string rigidity;
+
+	snprintf(valueArray, 10, "%d", _startVelocity);
+	startVelocity.append(valueArray, 10);
+	memset(valueArray, 0, sizeof(char)*10); // обнуление массива
+
+	snprintf(valueArray, 10, "%d", _startLevel);
+	startLevel.append(valueArray, 10);
+	memset(valueArray, 0, sizeof(char)*10); // обнуление массива
+
+	snprintf(valueArray, 10, "%d", _rigidity);
+	rigidity.append(valueArray, 10);
+	memset(valueArray, 0, sizeof(char)*10); // обнуление массива	
+
+	params.insert(make_pair(TAG_START_VELOCITY, startVelocity));
+	params.insert(make_pair(TAG_START_LEVEL, startLevel));
+	params.insert(make_pair(TAG_RIGIDITY, rigidity));
+	params.insert(make_pair(TAG_OBSTACLE_PATH,_obstaclePath));
+	params.insert(make_pair(TAG_POM_PATH,_partOfMapPath));
+	params.insert(make_pair(TAG_TEXTURE_PATH,_texturePath));
+	return params;
+}
+
 void Configuration::save()
 {
+	map<string, string> params;
+	ofstream cfgFile(CONFIGURATION_PATH);
+
+	params = getParameters(); // Получение настроек (тэг, значение)
+	map<string, string>::iterator it = params.begin();
+	while(it != params.end())
+	{
+		cfgFile << TAG_OPEN_BRACKET << it->first.c_str() << TAG_CLOSE_BRACKET;
+		cfgFile << " " << it->second.c_str() << " ";
+		cfgFile << TAG_OPEN_BRACKET << "/" << it->first.c_str() << TAG_CLOSE_BRACKET << endl;		
+		++it;
+	}
+
+	cfgFile.close();
+
 	clog << "Configuration has been saved!" << endl;
 }
 	/*Начальная скорость*/
