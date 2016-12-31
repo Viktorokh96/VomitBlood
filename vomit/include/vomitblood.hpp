@@ -15,8 +15,6 @@
 
 #define PART_HEIGHT 		1400
 
-//#define START_MAP_VELOCITY 	400
-
 #define VELOCITY_INCREMENT 	15
 
 #include "configuration.hpp"

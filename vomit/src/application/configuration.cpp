@@ -1,4 +1,5 @@
 #include <vomitblood.hpp>
+#include <tags.hpp>
 
 using namespace std;
 
@@ -9,6 +10,13 @@ Configuration::Configuration()
 	_obstaclePath.clear();
 	_partOfMapPath.clear();
 	_texturePath.clear();
+	// Настройки по умолчанию
+	_startVelocity = DEFAULT_START_VELOCITY;
+	_startLevel = DEFAULT_START_LEVEL;
+	_rigidity = DEFAULT_RIGIDITY;
+	_obstaclePath = DEFAULT_OBSTACLE_PATH;
+	_partOfMapPath = DEFAULT_POM_PATH;
+	_texturePath = DEFAULT_TEXTURE_PATH;
 }
 
 void Configuration::save()
