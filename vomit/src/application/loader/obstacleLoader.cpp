@@ -171,14 +171,43 @@ void ObstacleLoader::load()
 
 		// Получаем вектор вершин для данного препятствия
 		vertices_t vert = getObtacleVertices(_tagValueM[tags]);	
-
 		tags.pop_back();
+		
 		tags.push_back("texture");
 		// Берём текстур
 		tmpObst = new Obstacle(vert,_tagValueM[tags][0]);
 		// Загружаем в obstacles
 		obstacles.insert(make_pair(*it, tmpObst));
 		it++;
+
+		tags.pop_back();
+
+		tags.push_back("textureRect");
+		tagValueIter iter = _tagValueM.find(tags);
+		if (iter != _tagValueM.end()) // Если параметры взятия текстуры описаны
+		{
+			string strPos = iter->second[0];
+			string xS, yS, wS, hS;
+			xS.clear(); yS.clear(); wS.clear(); hS.clear();
+
+			const char *q = strPos.c_str();
+			for (; *q != ',' && *q != '\0'; q++)
+				xS += *q;
+			q++;
+			for (; *q != ',' && *q != '\0'; q++)
+				yS += *q;
+			q++;
+			for (; *q != ',' && *q != '\0'; q++)
+				wS += *q;
+			q++;
+			for (; *q != '\0'; q++)
+				hS += *q;
+
+			IntRect textRect(atoi(xS.c_str()), atoi(yS.c_str()),
+				atoi(wS.c_str()), atoi(hS.c_str()));
+
+			tmpObst->setTextureRect(textRect);
+		}
 	}
 
 	// Передаём глобальному объекту для хранения

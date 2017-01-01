@@ -126,7 +126,8 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 				}
 				valueVector.push_back(value); // добавляем значение в конец вектора
 				value.clear();
-				cfgFile >> c;
+				if (isspace(c))
+					cfgFile >> c;
 				if(cfgFile.eof())
 					{
 						ex.message("Unexpected end of file! There is no closing tag!");	

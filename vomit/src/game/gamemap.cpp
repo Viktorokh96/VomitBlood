@@ -313,16 +313,17 @@ void Map::drawInfo() const
 	points.setStyle(sf::Text::Bold);
 	level.setStyle(sf::Text::Bold);
 
-	char score[64], levelString[32];
+	char score[16], levelString[8];
 	sprintf(score,"Score:%ld",_points);
 	sprintf(levelString, "Level:%d", _level);
 	points.setString(score);
 	level.setString(levelString);
 
-	sf::FloatRect b = points.getLocalBounds();
+	sf::FloatRect bp = points.getLocalBounds();
+	sf::FloatRect bl = level.getLocalBounds();
 
-	points.setPosition(4*(WINDOW_WIDTH/5) - (b.width/2), (b.height));
-	level.setPosition(1*(WINDOW_WIDTH/5) - (b.width/2), (b.height));
+	points.setPosition(4*(WINDOW_WIDTH/5) - (bp.width/2), (bp.height));
+	level.setPosition(1*(WINDOW_WIDTH/5) - (bl.width/2), (bl.height));
 
 	window.draw(points);
 	window.draw(level);
