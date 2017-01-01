@@ -5,10 +5,10 @@
 
 #define CONFIGURATION_PATH "./config/config.cfg"
 
-#define UPDATES_PER_STEP 	60
+#define UPDATES_PER_STEP 	1
 
-#define VELOCITY_ADD_STEPS 	5
-#define LEVEL_ADD_STEPS 	25
+#define VELOCITY_ADD_STEPS 	1200
+#define LEVEL_ADD_STEPS 	4800
 
 #define WINDOW_WIDTH 		800
 #define WINDOW_HEIGHT 		700

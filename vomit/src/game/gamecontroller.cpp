@@ -140,7 +140,7 @@ void GameController::tadpoleMakeStep()
 {
 	cmd_t cmd;
 
-	cmd = _model->tadpoleMakeStep();
+	cmd = _model->tadpoleMakeStep(_view->getMapVelocity());
 
 	if (cmd.addVelocity) {
 		_view->addVelocity();

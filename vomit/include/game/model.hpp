@@ -10,7 +10,7 @@ public:
 	GameModel();
 	~GameModel();
 
-	cmd_t tadpoleMakeStep();
+	cmd_t tadpoleMakeStep(float mapSpeed);
 	cmd_t tadpoleCollide();
 	unsigned long getPoints();
 	void savePoints();

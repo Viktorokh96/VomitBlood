@@ -9,24 +9,33 @@ GameModel::GameModel()
 	_points = 0;
 }
 
-cmd_t GameModel::tadpoleMakeStep()
+cmd_t GameModel::tadpoleMakeStep(float mapSpeed)
 {
 	cmd_t retCmd;
 	retCmd.clear();
+	static long stepSumForAddVel = 0;
+	static long stepSumForAddLevel = 0;
 
-	_stepsCounter++;
+	unsigned stepIncrement = (mapSpeed / 100);
+	_stepsCounter += stepIncrement;
 
 	/* Функция расчёта очков */
-	_points = (_stepsCounter*_stepsCounter)/(1 + (sqrt(_stepsCounter)));
+	_points = (_stepsCounter*_stepsCounter)/(1 + 1000*(sqrt(_stepsCounter)));
 
-	if ((_stepsCounter % (VELOCITY_ADD_STEPS-1)) == 0) {
+	stepSumForAddVel += stepIncrement;
+	if (stepSumForAddVel >= VELOCITY_ADD_STEPS - 1)
+	{
 		retCmd.addVelocity = 1;
+		stepSumForAddVel = 0;
 	}
 
-	if ((_stepsCounter % (LEVEL_ADD_STEPS)) == 0 ) {
+	stepSumForAddLevel += stepIncrement;
+	if (stepSumForAddLevel >= LEVEL_ADD_STEPS - 1)
+	{
 		retCmd.addLevel = 1;
+		stepSumForAddLevel = 0;
 	}
-
+	
 	return retCmd;
 }
 

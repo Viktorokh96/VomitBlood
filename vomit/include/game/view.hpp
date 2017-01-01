@@ -147,6 +147,7 @@ public:
 	void makeTadpoleSleep();
 	void addVelocity();
 	void addLevel();
+	float getMapVelocity();
 };
 
 class GameMenuView : public IView {

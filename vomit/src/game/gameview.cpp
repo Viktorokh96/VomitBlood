@@ -249,6 +249,11 @@ void GameView::makeTadpoleSleep()
 	_tadpoleSleep = true;
 }
 
+float GameView::getMapVelocity()
+{
+	return _map->getVelocity();
+}
+
 /*
  * Метод перерасчёта позиции и столковении
  * значение dt - секунды (float)
