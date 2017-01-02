@@ -14,6 +14,8 @@
 //Открывающий и закрывающий тэги
 #define TAG_OPEN_BRACKET '['
 #define TAG_CLOSE_BRACKET ']'
+#define COMMENT_OPEN_BRACKET '<'
+#define COMMENT_CLOSE_BRACKET '>'
 
 // Начальная скорость
 #define TAG_START_VELOCITY "startVelocity" 	

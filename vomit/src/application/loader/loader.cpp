@@ -30,8 +30,6 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 	string value;
 	bool tagIsOpen = false; // флаг, указывающий на то, какие тэги участвуют в формировании вектора
 					// открытые - увеличивают его, закрытые - уменьшают. 
-	char tagOpenBracket = TAG_OPEN_BRACKET; // открывающая скобка
-	char tagCloseBracket = TAG_CLOSE_BRACKET; // закрывающая скобка
 	char c; // для временного хранения символов
 	bool isMadePair = false; // Пара в ассоциативный массив должна заходить один раз при закрытии тэгов 
 					//(точнее сразу же после закрытия первого тэга)
@@ -48,8 +46,23 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 	{
 		if(!cfgFile.eof()) // Вынесено для правильного функционирования цикла
 			cfgFile >> c;
-			
-		if (c != tagOpenBracket)
+
+		/*Чтение комментариев*/
+		if(c == COMMENT_OPEN_BRACKET)
+		{
+			// Пропускаем комментарии
+			while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+			{
+				while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+					cfgFile >> c;
+				// Считываем первый символ после комментариев (пропустив все пробелы)
+				if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+					cfgFile >> c;			
+			}
+		}
+		/*Конец блока чтения комментариев*/	
+
+		if (c != TAG_OPEN_BRACKET)
 			{
 				ex.message("Can't find first opening tag's bracket in configuration file!");
 				throw ex;
@@ -59,6 +72,21 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 		if(!cfgFile.eof()) // Вынесено для правильного функционирования цикла
 			cfgFile >> c;
+
+		/*Чтение комментариев*/
+		if(c == COMMENT_OPEN_BRACKET)
+		{
+			// Пропускаем комментарии
+			while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+			{
+				while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+					cfgFile >> c;
+				// Считываем первый символ после комментариев (пропустив все пробелы)
+				if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+					cfgFile >> c;			
+			}
+		}
+		/*Конец блока чтения комментариев*/			
 
 		if(cfgFile.eof()) // Вынесено для правильного функционирования цикла
 		{
@@ -71,10 +99,26 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 			/*Заполнение стека (вектора) открывающими тэгами*/
 			while (tagIsOpen) 
 			{
-				while(c != tagCloseBracket)
+				while(c != TAG_CLOSE_BRACKET)
 				{
 					tag += c; // считываем имя тэга
 					cfgFile >> c;
+
+					/*Чтение комментариев*/
+					if(c == COMMENT_OPEN_BRACKET)
+					{
+						// Пропускаем комментарии
+						while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+						{
+							while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+								cfgFile >> c;
+							// Считываем первый символ после комментариев (пропустив все пробелы)
+							if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+								cfgFile >> c;			
+						}
+					}
+					/*Конец блока чтения комментариев*/	
+
 					if(cfgFile.eof())
 					{
 						ex.message("Unexpected end of file! Incompleted opening tag!");	
@@ -89,16 +133,48 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 				tagVector.push_back(tag); // добавляем тэг в конец вектора		
 				tag.clear(); // очищаем место для названия нового тэга
 				cfgFile >> c; // считываем следующий символ
+
+				/*Чтение комментариев*/
+				if(c == COMMENT_OPEN_BRACKET)
+				{
+					// Пропускаем комментарии
+					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+					{
+						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;
+						// Считываем первый символ после комментариев (пропустив все пробелы)
+						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;			
+					}
+				}
+				/*Конец блока чтения комментариев*/	
+
 				if(cfgFile.eof())
 					{
 						ex.message("Unexpected end of file (1)! There is no closing tag!");	
 						throw ex;					
 					}
-				if(c != tagOpenBracket)
+				if(c != TAG_OPEN_BRACKET)
 					tagIsOpen = false;
 				else
 				{
 					cfgFile >> c;
+
+					/*Чтение комментариев*/
+					if(c == COMMENT_OPEN_BRACKET)
+					{
+						// Пропускаем комментарии
+						while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+						{
+							while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+								cfgFile >> c;
+							// Считываем первый символ после комментариев (пропустив все пробелы)
+							if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+								cfgFile >> c;			
+						}
+					}
+					/*Конец блока чтения комментариев*/	
+
 					if(cfgFile.eof())
 					{
 						ex.message("Unexpected end of file (2)! There is no closing tag!");	
@@ -107,13 +183,31 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 				}
 			}
 			//Читаем список значений
-			while (c != tagOpenBracket)
+			while (c != TAG_OPEN_BRACKET)
 			{
 				// считываем значение, пока не появился разделительный пробел
-				while((!isspace(c)) && (c != tagOpenBracket))
+				while((!isspace(c)) && (c != TAG_OPEN_BRACKET))
 				{
 					value += c;
 					cfgFile.get(c); // Читает с пробелами, в отличие от >>
+
+					/*Чтение комментариев*/
+					// Комментарии будут разделять значения, как пробелы!
+					if(c == COMMENT_OPEN_BRACKET)
+					{
+						// Пропускаем комментарии
+						while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+						{
+							while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+								cfgFile >> c;
+							// Считываем первый символ после комментариев (пропустив все пробелы)
+							if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+								cfgFile.get(c);	// считываем символ		
+						}
+						break; // выходим из цикла чтения значения
+					}
+					/*Конец блока чтения комментариев*/	
+
 					if(cfgFile.eof())
 					{
 						ex.message("Unexpected end of file! There is no closing tag!");	
@@ -128,6 +222,22 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 				value.clear();
 				if (isspace(c))
 					cfgFile >> c;
+
+				/*Чтение комментариев*/
+				if(c == COMMENT_OPEN_BRACKET)
+				{
+					// Пропускаем комментарии
+					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+					{
+						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;
+						// Считываем первый символ после комментариев (пропустив все пробелы)
+						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;			
+					}
+				}
+				/*Конец блока чтения комментариев*/	
+
 				if(cfgFile.eof())
 					{
 						ex.message("Unexpected end of file! There is no closing tag!");	
@@ -137,6 +247,22 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 			//Проверяем, что тэг действительно закрывающий
 			cfgFile >> c;
+
+			/*Чтение комментариев*/
+			if(c == COMMENT_OPEN_BRACKET)
+			{
+				// Пропускаем комментарии
+				while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+				{
+					while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+						cfgFile >> c;
+					// Считываем первый символ после комментариев (пропустив все пробелы)
+					if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+						cfgFile >> c;			
+				}
+			}
+			/*Конец блока чтения комментариев*/	
+
 			if(c != '/')
 			{
 				ex.message("Can't find '/' near closing tag! Missed closing tag!");
@@ -157,15 +283,47 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 					}
 				//Читаем закрывающий тэг
 				cfgFile >> c;
+
+				/*Чтение комментариев*/
+				if(c == COMMENT_OPEN_BRACKET)
+				{
+					// Пропускаем комментарии
+					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+					{
+						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;
+						// Считываем первый символ после комментариев (пропустив все пробелы)
+						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;			
+					}
+				}
+				/*Конец блока чтения комментариев*/	
+
 				if(cfgFile.eof())
 						{
 							ex.message("Unexpected end of file! Incompleted closing tag!");	
 							throw ex;					
 						}			
-				while(c != tagCloseBracket)
+				while(c != TAG_CLOSE_BRACKET)
 				{
 					tag += c; // считываем имя тэга
 					cfgFile >> c;
+
+					/*Чтение комментариев*/
+					if(c == COMMENT_OPEN_BRACKET)
+					{
+						// Пропускаем комментарии
+						while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+						{
+							while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+								cfgFile >> c;
+							// Считываем первый символ после комментариев (пропустив все пробелы)
+							if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+								cfgFile >> c;			
+						}
+					}
+					/*Конец блока чтения комментариев*/	
+
 					if(cfgFile.eof())
 						{
 							ex.message("Unexpected end of file! Incompleted closing tag!");	
@@ -193,12 +351,44 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 				valueVector.clear();	
 				tagVector.pop_back();
 				cfgFile >> c;
-				if((c != tagOpenBracket) && (!cfgFile.eof()))
+
+				/*Чтение комментариев*/
+				if(c == COMMENT_OPEN_BRACKET)
+				{
+					// Пропускаем комментарии
+					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+					{
+						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;
+						// Считываем первый символ после комментариев (пропустив все пробелы)
+						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;			
+					}
+				}
+				/*Конец блока чтения комментариев*/	
+
+				if((c != TAG_OPEN_BRACKET) && (!cfgFile.eof()))
 					{
 						ex.message("There is garbage after closing tag!");	
 						throw ex;					
 					}
 				cfgFile >> c;
+
+				/*Чтение комментариев*/
+				if(c == COMMENT_OPEN_BRACKET)
+				{
+					// Пропускаем комментарии
+					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+					{
+						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;
+						// Считываем первый символ после комментариев (пропустив все пробелы)
+						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+							cfgFile >> c;			
+					}
+				}
+				/*Конец блока чтения комментариев*/	
+
 				if(c != '/')
 				{
 					tagIsOpen = true;
