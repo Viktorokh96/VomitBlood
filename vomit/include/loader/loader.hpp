@@ -25,6 +25,7 @@ protected:
 	LoaderException ex;
 	string _path; // обязательно у всех наследников
 	virtual void load();
+	void skipComments(ifstream & cfgFile, char & c);
 	map<vector<string>, vector<string> > _tagValueM; // массив тэг-значение, обязательно у всех наследников
 	map<vector<string>, vector<string> > getTagValueM();
 	typedef map<vector<string>, vector<string> >::iterator tagValueIter;

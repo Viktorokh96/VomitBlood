@@ -21,6 +21,19 @@ Loader::Loader()
 void Loader::load()
 {}
 
+void Loader::skipComments(ifstream & cfgFile, char & c)
+{
+	// Пропускаем комментарии
+	while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+	{
+		while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+			cfgFile >> c;
+		// Считываем первый символ после комментариев (пропустив все пробелы)
+		if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
+			cfgFile >> c;			
+	}
+}
+
 map<vector<string>, vector<string> > Loader::getTagValueM()
 {
 	map<vector<string>, vector<string> > tagValueM; // ассоциативный массив (цепочка тэгов - значения)
@@ -49,18 +62,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 		/*Чтение комментариев*/
 		if(c == COMMENT_OPEN_BRACKET)
-		{
-			// Пропускаем комментарии
-			while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-			{
-				while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-					cfgFile >> c;
-				// Считываем первый символ после комментариев (пропустив все пробелы)
-				if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-					cfgFile >> c;			
-			}
-		}
-		/*Конец блока чтения комментариев*/	
+			skipComments(cfgFile, c);
 
 		if (c != TAG_OPEN_BRACKET)
 			{
@@ -75,18 +77,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 		/*Чтение комментариев*/
 		if(c == COMMENT_OPEN_BRACKET)
-		{
-			// Пропускаем комментарии
-			while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-			{
-				while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-					cfgFile >> c;
-				// Считываем первый символ после комментариев (пропустив все пробелы)
-				if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-					cfgFile >> c;			
-			}
-		}
-		/*Конец блока чтения комментариев*/			
+			skipComments(cfgFile, c);			
 
 		if(cfgFile.eof()) // Вынесено для правильного функционирования цикла
 		{
@@ -106,18 +97,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 					/*Чтение комментариев*/
 					if(c == COMMENT_OPEN_BRACKET)
-					{
-						// Пропускаем комментарии
-						while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-						{
-							while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-								cfgFile >> c;
-							// Считываем первый символ после комментариев (пропустив все пробелы)
-							if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-								cfgFile >> c;			
-						}
-					}
-					/*Конец блока чтения комментариев*/	
+						skipComments(cfgFile, c);
 
 					if(cfgFile.eof())
 					{
@@ -136,18 +116,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 				/*Чтение комментариев*/
 				if(c == COMMENT_OPEN_BRACKET)
-				{
-					// Пропускаем комментарии
-					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-					{
-						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;
-						// Считываем первый символ после комментариев (пропустив все пробелы)
-						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;			
-					}
-				}
-				/*Конец блока чтения комментариев*/	
+					skipComments(cfgFile, c);
 
 				if(cfgFile.eof())
 					{
@@ -162,18 +131,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 					/*Чтение комментариев*/
 					if(c == COMMENT_OPEN_BRACKET)
-					{
-						// Пропускаем комментарии
-						while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-						{
-							while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-								cfgFile >> c;
-							// Считываем первый символ после комментариев (пропустив все пробелы)
-							if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-								cfgFile >> c;			
-						}
-					}
-					/*Конец блока чтения комментариев*/	
+						skipComments(cfgFile, c);
 
 					if(cfgFile.eof())
 					{
@@ -192,21 +150,11 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 					cfgFile.get(c); // Читает с пробелами, в отличие от >>
 
 					/*Чтение комментариев*/
-					// Комментарии будут разделять значения, как пробелы!
 					if(c == COMMENT_OPEN_BRACKET)
 					{
-						// Пропускаем комментарии
-						while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-						{
-							while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-								cfgFile >> c;
-							// Считываем первый символ после комментариев (пропустив все пробелы)
-							if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-								cfgFile.get(c);	// считываем символ		
-						}
-						break; // выходим из цикла чтения значения
+						skipComments(cfgFile, c);
+						break; // Комментарии являются разделителями, как и пробелы						
 					}
-					/*Конец блока чтения комментариев*/	
 
 					if(cfgFile.eof())
 					{
@@ -225,18 +173,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 				/*Чтение комментариев*/
 				if(c == COMMENT_OPEN_BRACKET)
-				{
-					// Пропускаем комментарии
-					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-					{
-						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;
-						// Считываем первый символ после комментариев (пропустив все пробелы)
-						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;			
-					}
-				}
-				/*Конец блока чтения комментариев*/	
+					skipComments(cfgFile, c);
 
 				if(cfgFile.eof())
 					{
@@ -250,18 +187,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 			/*Чтение комментариев*/
 			if(c == COMMENT_OPEN_BRACKET)
-			{
-				// Пропускаем комментарии
-				while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-				{
-					while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-						cfgFile >> c;
-					// Считываем первый символ после комментариев (пропустив все пробелы)
-					if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-						cfgFile >> c;			
-				}
-			}
-			/*Конец блока чтения комментариев*/	
+				skipComments(cfgFile, c);
 
 			if(c != '/')
 			{
@@ -286,18 +212,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 				/*Чтение комментариев*/
 				if(c == COMMENT_OPEN_BRACKET)
-				{
-					// Пропускаем комментарии
-					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-					{
-						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;
-						// Считываем первый символ после комментариев (пропустив все пробелы)
-						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;			
-					}
-				}
-				/*Конец блока чтения комментариев*/	
+					skipComments(cfgFile, c);	
 
 				if(cfgFile.eof())
 						{
@@ -311,18 +226,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 					/*Чтение комментариев*/
 					if(c == COMMENT_OPEN_BRACKET)
-					{
-						// Пропускаем комментарии
-						while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-						{
-							while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-								cfgFile >> c;
-							// Считываем первый символ после комментариев (пропустив все пробелы)
-							if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-								cfgFile >> c;			
-						}
-					}
-					/*Конец блока чтения комментариев*/	
+						skipComments(cfgFile, c);
 
 					if(cfgFile.eof())
 						{
@@ -354,18 +258,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 
 				/*Чтение комментариев*/
 				if(c == COMMENT_OPEN_BRACKET)
-				{
-					// Пропускаем комментарии
-					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-					{
-						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;
-						// Считываем первый символ после комментариев (пропустив все пробелы)
-						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;			
-					}
-				}
-				/*Конец блока чтения комментариев*/	
+					skipComments(cfgFile, c);
 
 				if((c != TAG_OPEN_BRACKET) && (!cfgFile.eof()))
 					{
@@ -373,21 +266,10 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 						throw ex;					
 					}
 				cfgFile >> c;
-
+				
 				/*Чтение комментариев*/
 				if(c == COMMENT_OPEN_BRACKET)
-				{
-					// Пропускаем комментарии
-					while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
-					{
-						while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;
-						// Считываем первый символ после комментариев (пропустив все пробелы)
-						if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-							cfgFile >> c;			
-					}
-				}
-				/*Конец блока чтения комментариев*/	
+					skipComments(cfgFile, c);	
 
 				if(c != '/')
 				{
