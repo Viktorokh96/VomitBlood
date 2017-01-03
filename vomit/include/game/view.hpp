@@ -26,8 +26,8 @@ public:
 	bool isCollide();
 	bool isClicked();
 	
-	std::size_t getPointCount() const;
-    	Vector2f getPoint(std::size_t index) const;
+	numeric_t getPointCount() const;
+    	Vector2f getPoint(numeric_t index) const;
 };
 
 /*
@@ -50,8 +50,8 @@ public:
 	void setInMapPosition(float x, float y);
 	sf::Vector2f getInMapPosition();
 
-	std::size_t getPointCount() const;
-    	Vector2f getPoint(std::size_t index) const;
+	numeric_t getPointCount() const;
+    	Vector2f getPoint(numeric_t index) const;
 
 	bool isCollide(const sf::Shape &) const;
 };
@@ -73,7 +73,7 @@ class PartOfMap {
 	void updateObstacles();
 public:
 	PartOfMap();
-	PartOfMap(vector<Obstacle> obstacles, const unsigned level);
+	PartOfMap(std::vector<Obstacle> obstacles, const unsigned level);
 	~PartOfMap();
 	void update(float distance);
 

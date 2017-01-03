@@ -76,12 +76,12 @@ bool Tadpole::isClicked()
 			&& sf::Mouse::isButtonPressed(sf::Mouse::Left));
 }
 
-std::size_t Tadpole::getPointCount() const
+numeric_t Tadpole::getPointCount() const
 {
 	return _vertices.getVertexCount();
 }
 
-Vector2f Tadpole::getPoint(std::size_t index) const
+Vector2f Tadpole::getPoint(numeric_t index) const
 {
 	return _vertices[index].position;
 }

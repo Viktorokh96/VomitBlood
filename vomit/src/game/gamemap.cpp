@@ -61,12 +61,12 @@ sf::Vector2f Obstacle::getInMapPosition()
 	return _inMapPosition;
 }
 
-std::size_t Obstacle::getPointCount() const
+numeric_t Obstacle::getPointCount() const
 {
 	return _vertices.getVertexCount();
 }
 
-Vector2f Obstacle::getPoint(std::size_t index) const
+Vector2f Obstacle::getPoint(numeric_t index) const
 {
 	return _vertices[index].position;
 }
@@ -127,6 +127,8 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 	FloatRect objRect = obj.getGlobalBounds();
 	FloatRect obstacleRect = getGlobalBounds();
 
+	Transform obstTranf = getTransform();
+
 	// Если пересекаются внешние квадраты - уточняем пересечение
 	if(objRect.intersects(obstacleRect)) {
 		int objCount = obj.getPointCount();	
@@ -141,8 +143,8 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 			for(int j = 0; j < obstacleCount-1; ++j) {
 				sf::Vector2f _obstLine[2] =
 				{
-					(getTransform()*getPoint(j)),
-					(getTransform()*getPoint(j+1))
+					(obstTranf*getPoint(j)),
+					(obstTranf*getPoint(j+1))
 				};
 				if(linesIntersects(_objLine, _obstLine))
 					return true;
