@@ -1,5 +1,6 @@
 #include <vomitblood.hpp>
-#include <tags.hpp>
+#include "defaults.hpp"
+#include "tags.hpp"
 #include <fstream>
 #include <cstdlib>
 

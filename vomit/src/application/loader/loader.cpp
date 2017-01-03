@@ -24,10 +24,18 @@ void Loader::load()
 void Loader::skipComments(ifstream & cfgFile, char & c)
 {
 	// Пропускаем комментарии
-	while((c == COMMENT_OPEN_BRACKET) && (!cfgFile.eof()))
+	while(c == COMMENT_OPEN_BRACKET)
 	{
-		while((c != COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
-			cfgFile >> c;
+		while(c != COMMENT_CLOSE_BRACKET)
+		{
+			if(!cfgFile.eof())			
+				cfgFile >> c;
+			else
+			{
+				ex.message("Unexpected end of file! Missed closing bracket of comments!");
+				throw ex;
+			}
+		}
 		// Считываем первый символ после комментариев (пропустив все пробелы)
 		if((c == COMMENT_CLOSE_BRACKET) && (!cfgFile.eof()))
 			cfgFile >> c;			
@@ -237,7 +245,6 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 				//Проверяем закрывающий тэг на корректность
 				if(tag != tagVector.back())
 				{
-
 					ex.message("Wrong name of closing tag!");
 					cerr << tagVector.back();
 					throw ex;				
@@ -266,7 +273,7 @@ map<vector<string>, vector<string> > Loader::getTagValueM()
 						throw ex;					
 					}
 				cfgFile >> c;
-				
+
 				/*Чтение комментариев*/
 				if(c == COMMENT_OPEN_BRACKET)
 					skipComments(cfgFile, c);	
