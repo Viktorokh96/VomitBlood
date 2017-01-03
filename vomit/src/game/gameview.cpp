@@ -99,7 +99,7 @@ void GameMenuView::showStatus()
 	sf::Text status;
 	status.setFont(font);
 	status.setCharacterSize(80);
-	status.setColor(sf::Color::Red);
+	status.setFillColor(sf::Color::Red);
 	status.setStyle(sf::Text::Bold);
 
 	if(_status == gamePause)
@@ -119,7 +119,7 @@ void GameMenuView::showPoints()
 	sf::Text points;
 	points.setFont(font);
 	points.setCharacterSize(30);
-	points.setColor(sf::Color::Red);
+	points.setFillColor(sf::Color::Red);
 	points.setStyle(sf::Text::Bold);
 
 	char score[64];
@@ -207,7 +207,7 @@ GameView::GameView()
 void GameView::newGame()
 {
 	_map->newMap();
-	_map->setVelocity(config.getStartVelocity());
+	_map->setVelocity(static_cast<float>(config.getStartVelocity()));
 	_map->setLevel(config.getStartLevel());
 	_tadpole->goToStart();
 	_tadpoleSleep = true;
@@ -281,7 +281,10 @@ cmd_t GameView::update()
 	} else {
 	/* Мерцание головастиком, для привлечения внимания игрока */
 		static double a = 0.f;	
-		_tadpole->setScale(abs(cos(a)), abs(cos(a)));
+		_tadpole->setScale(
+			static_cast<float>(abs(cos(a))), 
+			static_cast<float>(abs(cos(a)))
+		);
 		a += 0.04f;
 		if(a > 1000) a = 0;
 

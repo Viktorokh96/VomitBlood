@@ -43,7 +43,7 @@ public:
 	}
 	void choicePastPartOfMap() {
 		if (_current == 0)
-			_current = _holder._partOfMaps.size() - 1;
+			_current = static_cast<unsigned int>(_holder._partOfMaps.size() - 1);
 		else
 			_current--;
 	}

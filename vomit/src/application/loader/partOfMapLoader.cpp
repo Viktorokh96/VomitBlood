@@ -129,7 +129,8 @@ void PartOfMapLoader::load()
 				for (; *q != '\0'; q++)
 					yS += *q;
 
-				sf::Vector2f pos(atof(xS.c_str()), atof(yS.c_str()));
+				sf::Vector2f pos(static_cast<float>(atof(xS.c_str())), 
+					static_cast<float>(atof(yS.c_str())));
 				tmpObstacle.setInMapPosition(pos);
 			}
 			else
@@ -149,7 +150,7 @@ void PartOfMapLoader::load()
 			if (findIter != _tagValueM.end())
 			{
 				string strRotate = findIter->second[0];
-				tmpObstacle.rotate(atof(strRotate.c_str()));
+				tmpObstacle.rotate(static_cast<float>(atof(strRotate.c_str())));
 			}
 			else
 			{
@@ -174,7 +175,10 @@ void PartOfMapLoader::load()
 				for (; *q != '\0'; q++)
 					yS += *q;
 
-				tmpObstacle.setScale(atof(xS.c_str()), atof(yS.c_str()));
+				tmpObstacle.setScale(
+					static_cast<float>(atof(xS.c_str())), 
+					static_cast<float>(atof(yS.c_str()))
+				);
 			}
 			else
 			{

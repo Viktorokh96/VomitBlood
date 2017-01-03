@@ -16,11 +16,12 @@ cmd_t GameModel::tadpoleMakeStep(float mapSpeed)
 	static long stepSumForAddVel = 0;
 	static long stepSumForAddLevel = 0;
 
-	unsigned stepIncrement = (mapSpeed / 100);
+	unsigned stepIncrement = static_cast<unsigned>((mapSpeed / 100));
 	_stepsCounter += stepIncrement;
 
 	/* Функция расчёта очков */
-	_points = (_stepsCounter*_stepsCounter)/(1 + 1000*(sqrt(_stepsCounter)));
+	_points = static_cast<unsigned long>
+		((_stepsCounter*_stepsCounter)/(1 + 1000*(sqrt(_stepsCounter))));
 
 	stepSumForAddVel += stepIncrement;
 	if (stepSumForAddVel >= VELOCITY_ADD_STEPS - 1)

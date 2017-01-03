@@ -21,7 +21,9 @@ bool Button::isClicked()
 {
 	sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 
-	return (getGlobalBounds().contains(mousePosition.x, mousePosition.y) &&
+	return (getGlobalBounds().contains(
+				static_cast<float>(mousePosition.x), 
+				static_cast<float>(mousePosition.y)) &&
 			sf::Mouse::isButtonPressed(sf::Mouse::Left));
 }
 
@@ -47,7 +49,7 @@ MenuView::MenuView()
 	screenTexture = resourceHolder.getTexture("background");
 	endTexture = resourceHolder.getTexture("exitButton");
 
-	if(!font.loadFromFile("media/menu/FEASFBRG.TTF"));
+	if(!font.loadFromFile("media/menu/FEASFBRG.TTF"))
 	{
 		cerr << "MenuViuew: ERROR LOADING FONT!" << endl;
 	}
@@ -65,7 +67,7 @@ MenuView::MenuView()
 
 	promt.setFont(font);
 	promt.setCharacterSize(120);
-	promt.setColor(sf::Color::Red);
+	promt.setFillColor(sf::Color::Red);
 	promt.setStyle(sf::Text::Bold);
 	promt.setString("Vomit Blood");
 

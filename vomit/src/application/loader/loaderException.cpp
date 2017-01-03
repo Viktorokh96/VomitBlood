@@ -18,7 +18,7 @@ LoaderException::LoaderException(const LoaderException &obj)
 
 	if(obj._errorMessage)
 	{
-		const int ERRSTR_SIZE = strlen( obj._errorMessage );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( obj._errorMessage ));
 		_errorMessage = new char[ ERRSTR_SIZE + 1 ];
 		
 		strncpy ( _errorMessage, obj._errorMessage, ERRSTR_SIZE);
@@ -27,7 +27,7 @@ LoaderException::LoaderException(const LoaderException &obj)
 
 	if(obj._message)
 	{
-		const int ERRSTR_SIZE = strlen( obj._message );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( obj._message ));
 		_message = new char[ ERRSTR_SIZE + 1 ];
 		
 		strncpy ( _message, obj._message, ERRSTR_SIZE);
@@ -53,7 +53,7 @@ void LoaderException::message(const char* errStr)
 {
 	if ( errStr != NULL )
 	{
-	  const int ERRSTR_SIZE = strlen( errStr );
+	  const int ERRSTR_SIZE = static_cast<const int>(strlen( errStr ));
 	  _errorMessage = new char[ ERRSTR_SIZE + 1 ];
 
 	  strncpy( _errorMessage, errStr, ERRSTR_SIZE );
@@ -69,8 +69,8 @@ const char* LoaderException::what()
 {
 	if (_errorMessage)
 	{
-		const int msgLen = strlen(_message);
-		const int errLen = strlen(_errorMessage);
+		const int msgLen = static_cast<const int>(strlen(_message));
+		const int errLen = static_cast<const int>(strlen(_errorMessage));
 		const int ERRSTR_SIZE = msgLen + errLen;
 		char *errMsg = new char[ ERRSTR_SIZE + 1];
 		strncpy ( errMsg, _message, msgLen);
@@ -88,7 +88,7 @@ LoaderException & LoaderException::operator=(LoaderException ex)
 	if(this == &ex) return *this;
 	if(ex._errorMessage)
 	{
-		const int ERRSTR_SIZE = strlen( ex._errorMessage );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._errorMessage ));
 		_errorMessage = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _errorMessage, ex._errorMessage, ERRSTR_SIZE);
@@ -97,7 +97,7 @@ LoaderException & LoaderException::operator=(LoaderException ex)
 
 	if(ex._message)
 	{
-		const int ERRSTR_SIZE = strlen( ex._message );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._message ));
 		_message = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _message, ex._message, ERRSTR_SIZE);
@@ -113,7 +113,7 @@ LoaderException & LoaderException::operator=(LoaderException ex)
 
 ConfigurationLoaderException::ConfigurationLoaderException()
 {	
-	const int messageLength = strlen("ConfigurationLoader exception: ");
+	const int messageLength = static_cast<const int>(strlen("ConfigurationLoader exception: "));
 	_message = new char[messageLength + 1];
 	strncpy(_message, "ConfigurationLoader exception: ", messageLength);
 	_message[messageLength] = '\0';
@@ -140,7 +140,7 @@ ConfigurationLoaderException & ConfigurationLoaderException::operator=(Configura
 	if(this == &ex) return *this;
 	if(ex._errorMessage)
 	{
-		const int ERRSTR_SIZE = strlen( ex._errorMessage );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._errorMessage ));
 		_errorMessage = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _errorMessage, ex._errorMessage, ERRSTR_SIZE);
@@ -149,7 +149,7 @@ ConfigurationLoaderException & ConfigurationLoaderException::operator=(Configura
 
 	if(ex._message)
 	{
-		const int ERRSTR_SIZE = strlen( ex._message );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._message ));
 		_message = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _message, ex._message, ERRSTR_SIZE);
@@ -164,7 +164,7 @@ ConfigurationLoaderException & ConfigurationLoaderException::operator=(Configura
 
 TextureLoaderException::TextureLoaderException()
 {	
-	const int messageLength = strlen("TextureLoader exception: ");
+	const int messageLength = static_cast<const int>(strlen("TextureLoader exception: "));
 	_message = new char[messageLength + 1];
 	strncpy(_message, "TextureLoader exception: ", messageLength);
 	_message[messageLength] = '\0';
@@ -191,7 +191,7 @@ TextureLoaderException & TextureLoaderException::operator=(TextureLoaderExceptio
 	if(this == &ex) return *this;
 	if(ex._errorMessage)
 	{
-		const int ERRSTR_SIZE = strlen( ex._errorMessage );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._errorMessage ));
 		_errorMessage = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _errorMessage, ex._errorMessage, ERRSTR_SIZE);
@@ -200,7 +200,7 @@ TextureLoaderException & TextureLoaderException::operator=(TextureLoaderExceptio
 
 	if(ex._message)
 	{
-		const int ERRSTR_SIZE = strlen( ex._message );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._message ));
 		_message = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _message, ex._message, ERRSTR_SIZE);
@@ -215,7 +215,7 @@ TextureLoaderException & TextureLoaderException::operator=(TextureLoaderExceptio
 
 ObstacleLoaderException::ObstacleLoaderException()
 {	
-	const int messageLength = strlen("ObstacleLoader exception: ");
+	const int messageLength = static_cast<const int>(strlen("ObstacleLoader exception: "));
 	_message = new char[messageLength + 1];
 	strncpy(_message, "ObstacleLoader exception: ", messageLength);
 	_message[messageLength] = '\0';
@@ -242,7 +242,7 @@ ObstacleLoaderException & ObstacleLoaderException::operator=(ObstacleLoaderExcep
 	if(this == &ex) return *this;
 	if(ex._errorMessage)
 	{
-		const int ERRSTR_SIZE = strlen( ex._errorMessage );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._errorMessage ));
 		_errorMessage = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _errorMessage, ex._errorMessage, ERRSTR_SIZE);
@@ -251,7 +251,7 @@ ObstacleLoaderException & ObstacleLoaderException::operator=(ObstacleLoaderExcep
 
 	if(ex._message)
 	{
-		const int ERRSTR_SIZE = strlen( ex._message );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._message ));
 		_message = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _message, ex._message, ERRSTR_SIZE);
@@ -266,7 +266,7 @@ ObstacleLoaderException & ObstacleLoaderException::operator=(ObstacleLoaderExcep
 
 PartOfMapLoaderException::PartOfMapLoaderException()
 {	
-	const int messageLength = strlen("PartOfMapLoader exception: ");
+	const int messageLength = static_cast<const int>(strlen("PartOfMapLoader exception: "));
 	_message = new char[messageLength + 1];
 	strncpy(_message, "PartOfMapLoader exception: ", messageLength);
 	_message[messageLength] = '\0';
@@ -293,7 +293,7 @@ PartOfMapLoaderException & PartOfMapLoaderException::operator=(PartOfMapLoaderEx
 	if(this == &ex) return *this;
 	if(ex._errorMessage)
 	{
-		const int ERRSTR_SIZE = strlen( ex._errorMessage );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._errorMessage ));
 		_errorMessage = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _errorMessage, ex._errorMessage, ERRSTR_SIZE);
@@ -302,7 +302,7 @@ PartOfMapLoaderException & PartOfMapLoaderException::operator=(PartOfMapLoaderEx
 
 	if(ex._message)
 	{
-		const int ERRSTR_SIZE = strlen( ex._message );
+		const int ERRSTR_SIZE = static_cast<const int>(strlen( ex._message ));
 		_message = new char[ ERRSTR_SIZE + 1];
 		
 		strncpy ( _message, ex._message, ERRSTR_SIZE);

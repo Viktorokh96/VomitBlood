@@ -78,6 +78,7 @@ vertices_t getObtacleVertices(vector<string> coord)
 		{
 			
 			xS.clear(); yS.clear();
+			float x, y;
 
 			switch(st)
 			{
@@ -91,10 +92,13 @@ vertices_t getObtacleVertices(vector<string> coord)
 					p++;
 					for(; (!isspace(*p)) && (!iscntrl(*p)); p++)
 						yS += *p;
+
+					x = static_cast<float>(atof(xS.c_str()));
+					y = static_cast<float>(atof(yS.c_str()));
 					if(st == LINE_ABS || st  == MOVE_ABS)
-						lastPos = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));
+						lastPos = sf::Vector2f(x, y);
 					else
-						lastPos = sf::Vector2f(lastPos.x + atof(xS.c_str()), lastPos.y + atof(yS.c_str()));
+						lastPos = sf::Vector2f(lastPos.x + x, lastPos.y + y);
 
 					readed.push_back(lastPos);
 					iter++;
@@ -116,10 +120,13 @@ vertices_t getObtacleVertices(vector<string> coord)
 						for(; (!isspace(*p)) && (!iscntrl(*p)); p++)
 							yS += *p;
 
+						x = static_cast<float>(atof(xS.c_str()));
+						y = static_cast<float>(atof(yS.c_str()));
+
 						if(st == CURVE_ABS) {
-							points[i] = sf::Vector2f(atof(xS.c_str()), atof(yS.c_str()));	
+							points[i] = sf::Vector2f(x, y);	
 						} else {
-							lastPos = sf::Vector2f(lastPos.x + atof(xS.c_str()), lastPos.y + atof(yS.c_str()));
+							lastPos = sf::Vector2f(lastPos.x + x, lastPos.y + y);
 							points[i] = lastPos;
 						}
 					}

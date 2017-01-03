@@ -131,8 +131,8 @@ bool Obstacle::isCollide(const sf::Shape &obj) const
 
 	// Если пересекаются внешние квадраты - уточняем пересечение
 	if(objRect.intersects(obstacleRect)) {
-		int objCount = obj.getPointCount();	
-		int obstacleCount = getPointCount();	
+		int objCount = static_cast<int>(obj.getPointCount());
+		int obstacleCount = static_cast<int>(getPointCount());
 		
 		for (int i = 0; i < objCount-1; ++i) {
 			sf::Vector2f _objLine[2] =
@@ -310,8 +310,8 @@ void Map::drawInfo() const
 	level.setFont(font);
 	points.setCharacterSize(30);
 	level.setCharacterSize(30);
-	points.setColor(sf::Color::Red);
-	level.setColor(sf::Color::Green);
+	points.setFillColor(sf::Color::Red);
+	level.setFillColor(sf::Color::Green);
 	points.setStyle(sf::Text::Bold);
 	level.setStyle(sf::Text::Bold);
 

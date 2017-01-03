@@ -47,7 +47,7 @@ void Tadpole::update(sf::Time dt)
 	sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 	sf::Vector2f tadpolePosition = getPosition();
 	int rigidity = config.getRigidity();
-	sf::Vector2i velocity
+	sf::Vector2f velocity
 	(
 		rigidity*(mousePosition.x-tadpolePosition.x),
 		rigidity*(mousePosition.y-tadpolePosition.y)
@@ -72,8 +72,10 @@ bool Tadpole::isClicked()
 {
 	sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 	FloatRect bounds = getGlobalBounds();
-	return (bounds.contains(mousePosition.x, mousePosition.y) 
-			&& sf::Mouse::isButtonPressed(sf::Mouse::Left));
+	return (bounds.contains(
+						static_cast<float>(mousePosition.x), 
+						static_cast<float>(mousePosition.y)
+			) && sf::Mouse::isButtonPressed(sf::Mouse::Left));
 }
 
 numeric_t Tadpole::getPointCount() const
