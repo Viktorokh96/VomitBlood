@@ -31,30 +31,37 @@ Button::~Button()
 
 /////////////////////////////// MenuView ///////////////////////////////
 
-static sf::Texture screenTexture;
-static sf::Texture startTexture;
-static sf::Texture endTexture;
 static sf::Font font;
 static sf::Text promt;
-
 static sf::Sprite backScreen;
 
 MenuView::MenuView()
 {
+	sf::Texture *startTexture;
+	sf::Texture *screenTexture;
+	sf::Texture *endTexture;
+
 	_buttons.clear();
 
-	startTexture.loadFromFile("media/menu/startbutton.jpg");
-	endTexture.loadFromFile("media/menu/endbutton.jpg");
-	font.loadFromFile("media/menu/FEASFBRG.TTF");
-	screenTexture.loadFromFile("media/menu/screen.jpg");
+	startTexture = resourceHolder.getTexture("startButton");
+	screenTexture = resourceHolder.getTexture("background");
+	endTexture = resourceHolder.getTexture("exitButton");
 
-	backScreen = sf::Sprite(screenTexture);
+	if(!font.loadFromFile("media/menu/FEASFBRG.TTF"));
+	{
+		cerr << "MenuViuew: ERROR LOADING FONT!" << endl;
+	}
+
+	backScreen = sf::Sprite(*screenTexture);
 	backScreen.setTextureRect(sf::IntRect(0, 0, 800, 644));
 	backScreen.setPosition(0,28);
 
-	startTexture.setSmooth(true);
-	endTexture.setSmooth(true);
-	screenTexture.setSmooth(true);
+	if(startTexture)
+		startTexture->setSmooth(true);
+	if(endTexture)
+		endTexture->setSmooth(true);
+	if(screenTexture)
+		screenTexture->setSmooth(true);
 
 	promt.setFont(font);
 	promt.setCharacterSize(120);
@@ -70,12 +77,14 @@ MenuView::MenuView()
 
 	button.setTextureRect(sf::IntRect(18,18, 300, 300));
 
-	button.setTexture(&startTexture);
+	if(startTexture)
+		button.setTexture(startTexture);
 
 	// start button
 	_buttons.insert(make_pair('s', button));
 
-	button.setTexture(&endTexture);
+	if(endTexture)
+		button.setTexture(endTexture);
 
 	button.setPosition(sf::Vector2f((WINDOW_WIDTH/2)-BUTT_RAD, 
 					9*(WINDOW_HEIGHT/15)));

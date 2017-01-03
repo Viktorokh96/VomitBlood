@@ -6,8 +6,9 @@ using namespace std;
 
 TextureLoader::TextureLoader()
 {
-	ex = TextureLoaderException(); // Указываем, что будут вызываться исключения для загрузки препятствий
-	_path = config.getTexturePath(); // изменить на _path = Configuration.getObstaclePath(); !!!
+	// Исключения при ошибке загрузки текстуры вызываться не будут
+	// Потому как отсутсвие текстуры - проблема не критическая для игры
+	_path = config.getTexturePath(); 
 	_tagValueM = getTagValueM();
 	load();
 }
@@ -28,8 +29,9 @@ void TextureLoader::load()
 		if (!texture->loadFromFile(texturePath))
 		{
 			delete texture;
-			ex.message("Unable to load texture!");
-			throw ex;
+			textures.insert(make_pair(textureName, (Texture *) NULL));
+			cerr << "TextureLoader: Failed to load texture " << textureName
+				<< " from " << texturePath << endl;
 		}
 		else
 		{
