@@ -67,7 +67,7 @@ MenuView::MenuView()
 
 	promt.setFont(font);
 	promt.setCharacterSize(120);
-	promt.setFillColor(sf::Color::Red);
+	promt._setFillColor(sf::Color::Red);
 	promt.setStyle(sf::Text::Bold);
 	promt.setString("Vomit Blood");
 

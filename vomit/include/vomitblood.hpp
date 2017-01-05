@@ -5,12 +5,6 @@
 
 #define CONFIGURATION_PATH "./config/config.cfg"
 
-#if (SFML_VERSION_MAJOR == 2) && (SFML_VERSION_MINOR < 3)
-	typedef unsigned int numeric_t;
-#else
-	typedef std::size_t numeric_t;
-#endif
-
 /* 
  * Стандартные конфигурации игры
 */
@@ -25,6 +19,8 @@
 #define PART_HEIGHT 		1400
 
 #define VELOCITY_INCREMENT 	15
+
+#include "defines.hpp"
 
 #include "configuration.hpp"
 

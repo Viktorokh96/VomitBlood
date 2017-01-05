@@ -99,7 +99,7 @@ void GameMenuView::showStatus()
 	sf::Text status;
 	status.setFont(font);
 	status.setCharacterSize(80);
-	status.setFillColor(sf::Color::Red);
+	status._setFillColor(sf::Color::Red);
 	status.setStyle(sf::Text::Bold);
 
 	if(_status == gamePause)
@@ -119,7 +119,7 @@ void GameMenuView::showPoints()
 	sf::Text points;
 	points.setFont(font);
 	points.setCharacterSize(30);
-	points.setFillColor(sf::Color::Red);
+	points._setFillColor(sf::Color::Red);
 	points.setStyle(sf::Text::Bold);
 
 	char score[64];
